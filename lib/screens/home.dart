@@ -15,6 +15,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
+      backgroundColor: Theme.of(context).accentColor,
       body: Center(
           child: Column(
         children: <Widget>[
@@ -24,7 +25,6 @@ class MyHomePage extends StatelessWidget {
           Button(text: "Im in need of help", pageName: "Registration")
         ],
       )),
-      backgroundColor: Theme.of(context).accentColor,
     );
   }
 }
