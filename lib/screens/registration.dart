@@ -18,7 +18,6 @@ class _RegistrationState extends State<Registration> {
   TextEditingController postcodeController = TextEditingController();
   TextEditingController streetAddressController = TextEditingController();
   TextEditingController cityController = TextEditingController();
-  TextEditingController distanceController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
   String enteredName = '';
@@ -28,7 +27,7 @@ class _RegistrationState extends State<Registration> {
   String enteredPostcode = '';
   String enteredStreetAddress = '';
   String enteredCity = "";
-  int enteredDistanceToTravel = 0;
+  double enteredDistanceToTravel = 5.0;
 
   @override
   Widget build(BuildContext context) {
@@ -128,40 +127,73 @@ class _RegistrationState extends State<Registration> {
                   },
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 7.0, bottom: 7.0, right: 20.0),
-                child: TextFormField(
-                  controller: streetAddressController,
-                  decoration: InputDecoration(
-                    labelText: 'Street Address',
-                    icon: Icon(Icons.location_on,
-                        color: Theme.of(context).primaryColor),
+              if (widget.screen == 'helpee')
+                Padding(
+                  padding: EdgeInsets.only(top: 7.0, bottom: 7.0, right: 20.0),
+                  child: TextFormField(
+                    controller: streetAddressController,
+                    decoration: InputDecoration(
+                      labelText: 'Street Address',
+                      icon: Icon(Icons.location_on,
+                          color: Theme.of(context).primaryColor),
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter your street address';
+                      }
+                      return null;
+                    },
                   ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter your street address';
-                    }
-                    return null;
-                  },
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 7.0, bottom: 7.0, right: 20.0),
-                child: TextFormField(
-                  controller: cityController,
-                  decoration: InputDecoration(
-                    labelText: 'City',
-                    icon: Icon(Icons.location_on,
-                        color: Theme.of(context).primaryColor),
+              if (widget.screen == 'helpee')
+                Padding(
+                  padding: EdgeInsets.only(top: 7.0, bottom: 7.0, right: 20.0),
+                  child: TextFormField(
+                    controller: cityController,
+                    decoration: InputDecoration(
+                      labelText: 'City',
+                      icon: Icon(Icons.location_on,
+                          color: Theme.of(context).primaryColor),
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter your city';
+                      }
+                      return null;
+                    },
                   ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter your city';
-                    }
-                    return null;
-                  },
                 ),
-              ),
+              if (widget.screen == 'volunteer')
+                Padding(
+                  padding: EdgeInsets.only(top: 15.0),
+                  child: Row(
+                    children: <Widget>[
+                      Text("0"),
+                      Expanded(
+                        child: Slider(
+                          value: enteredDistanceToTravel,
+                          min: 0,
+                          max: 10,
+                          divisions: 20,
+                          label: "$enteredDistanceToTravel",
+                          activeColor: Theme.of(context).primaryColor,
+                          onChanged: (value) {
+                            setState(() {
+                              enteredDistanceToTravel = value;
+                            });
+                          },
+                        ),
+                      ),
+                      Text("10"),
+                    ],
+                  ),
+                ),
+              if (widget.screen == 'volunteer')
+                Padding(
+                  padding: EdgeInsets.only(bottom: 15.0),
+                  child: Text(
+                      "Distance willing to travel: $enteredDistanceToTravel miles"),
+                ),
               RaisedButton(
                 color: Theme.of(context).primaryColor,
                 child: Text(
