@@ -1,8 +1,7 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import './dashboardHelpee.dart';
-import './dashboardVolunteer.dart';
+import './login.dart';
 
 class Registration extends StatefulWidget {
   final String screen;
@@ -256,17 +255,9 @@ class _RegistrationState extends State<Registration> {
   }
 
   navigateToPage() {
-    if (widget.screen == "volunteer") {
-      return Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => VolunteerDashboard()),
-      );
-    }
-    if (widget.screen == "helpee") {
-      return Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HelpeeDashboard()),
-      );
-    }
+    return Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Login(screen: "registration")),
+    );
   }
 }
