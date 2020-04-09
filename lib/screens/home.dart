@@ -60,15 +60,27 @@ class Button extends StatelessWidget {
           switch (text) {
             case 'Login':
               return Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Login()));
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Login(),
+                ),
+              );
               break;
             case 'Register as a Volunteer':
-              return Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Registration()));
+              return Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Registration(screen: "volunteer"),
+                ),
+              );
               break;
             case 'Im in need of help':
-              return Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Registration()));
+              return Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Registration(screen: "helpee"),
+                ),
+              );
               break;
           }
         },
