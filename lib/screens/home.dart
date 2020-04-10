@@ -9,8 +9,8 @@ class MyHomePage extends StatelessWidget {
   final String title;
   String login;
   final testQuery = '''query TestQuery {
-  users {
-    name
+  login(email: "lehoczki.judit@gmail.com", password: "tester") {
+    name _id email phoneNumber userType postcode
   }
 }''';
   MyHomePage({Key key, @required this.title}) : super(key: key);
@@ -29,38 +29,21 @@ class MyHomePage extends StatelessWidget {
           Button(text: "Login", pageName: "Login"),
           Button(text: "Register as a Volunteer", pageName: "Registration"),
           Button(text: "Im in need of help", pageName: "Registration"),
-          Query(
-            options: QueryOptions(
-              documentNode: gql(testQuery),
-            ),
-            builder: (QueryResult result,
-                {VoidCallback refetch, FetchMore fetchMore}) {
-              print(result.data["users"][0]["name"]);
-              return Text(result.data["users"][0]["name"]);
-            },
-          )
+          // Query(
+          //   options: QueryOptions(
+          //     documentNode: gql(testQuery),
+          //   ),
+          //   builder: (QueryResult result,
+          //       {VoidCallback refetch, FetchMore fetchMore}) {
+          //     print(result.data["login"]);
+          //     return Text("hello");
+          //   },
+          // )
         ],
       )),
     );
   }
 }
-
-// getUsers() {
-//   final testQuery = '''query TestQuery {
-//   users {
-//     name
-//   }
-// }''';
-//   return Query(
-//     options: QueryOptions(
-//       documentNode: gql(testQuery),
-//     ),
-//     builder: (QueryResult result, {VoidCallback refetch, FetchMore fetchMore}) {
-//       print(result.data);
-//       return Text("Hello");
-//     },
-//   );
-// }
 
 class ShoppingBasketLogo extends StatelessWidget {
   @override
