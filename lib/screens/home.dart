@@ -18,29 +18,80 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
       backgroundColor: Theme.of(context).accentColor,
-      body: Center(
+      body: Container(
+          width: 1000.0,
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            image: DecorationImage(
+                repeat: ImageRepeat.noRepeat,
+                colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.3), BlendMode.dstATop),
+                image: AssetImage('./images/grocery-cart-with-item.jpg'),
+                fit: BoxFit.cover),
+          ),
           child: Column(
-        children: <Widget>[
-          ShoppingBasketLogo(),
-          Button(text: "Login", pageName: "Login"),
-          Button(text: "Register as a Volunteer", pageName: "Registration"),
-          Button(text: "Im in need of help", pageName: "Registration"),
-          // Query(
-          //   options: QueryOptions(
-          //     documentNode: gql(testQuery),
-          //   ),
-          //   builder: (QueryResult result,
-          //       {VoidCallback refetch, FetchMore fetchMore}) {
-          //     print(result.data["login"]);
-          //     return Text("hello");
-          //   },
-          // )
-        ],
-      )),
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(top: 180.0),
+                child: Center(
+                  child: Icon(
+                    Icons.shopping_basket,
+                    color: Colors.white,
+                    size: 65.0,
+                  ),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(top: 20.0),
+                child: new Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "Helping",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      " Hand",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                margin:
+                    const EdgeInsets.only(left: 30.0, right: 30.0, top: 100.0),
+                alignment: Alignment.center,
+                child: Column(
+                  children: <Widget>[
+                    Button(text: "Login", pageName: "Login"),
+                    Button(
+                        text: "Register as a Volunteer",
+                        pageName: "Registration"),
+                    Button(
+                        text: "I'm in need of help", pageName: "Registration"),
+                  ],
+                ),
+              )
+              // Query(
+              //   options: QueryOptions(
+              //     documentNode: gql(testQuery),
+              //   ),
+              //   builder: (QueryResult result,
+              //       {VoidCallback refetch, FetchMore fetchMore}) {
+              //     print(result.data["login"]);
+              //     return Text("hello");
+              //   },
+              // )
+            ],
+          )),
     );
   }
 }
@@ -67,11 +118,22 @@ class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var button = Container(
+      height: 50.0,
       margin: EdgeInsets.only(top: 7.5, bottom: 7.5),
-      child: RaisedButton(
-        child: Text(text),
+      padding: EdgeInsets.all(3.0),
+      child: FlatButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
+          side: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
+        ),
+        child: Text(
+          text,
+          style: TextStyle(fontSize: 18.0),
+        ),
+        textColor: Theme.of(context).primaryColor,
         color: Colors.white,
-        elevation: 5.0,
+        hoverColor: Colors.white60,
+        // Theme.of(context).primaryColorLight,
         onPressed: () {
           switch (text) {
             case 'Login':
@@ -90,7 +152,7 @@ class Button extends StatelessWidget {
                 ),
               );
               break;
-            case 'Im in need of help':
+            case "I'm in need of help":
               return Navigator.push(
                 context,
                 MaterialPageRoute(
