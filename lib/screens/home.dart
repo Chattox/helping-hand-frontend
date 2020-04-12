@@ -2,11 +2,17 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import './login.dart';
 import './registration.dart';
+import 'dart:convert';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 class MyHomePage extends StatelessWidget {
   final String title;
   String login;
-
+  final testQuery = '''query TestQuery {
+  login(email: "lehoczki.judit@gmail.com", password: "tester") {
+    name _id email phoneNumber userType postcode
+  }
+}''';
   MyHomePage({Key key, @required this.title}) : super(key: key);
 
   @override
@@ -22,7 +28,17 @@ class MyHomePage extends StatelessWidget {
           ShoppingBasketLogo(),
           Button(text: "Login", pageName: "Login"),
           Button(text: "Register as a Volunteer", pageName: "Registration"),
-          Button(text: "Im in need of help", pageName: "Registration")
+          Button(text: "Im in need of help", pageName: "Registration"),
+          // Query(
+          //   options: QueryOptions(
+          //     documentNode: gql(testQuery),
+          //   ),
+          //   builder: (QueryResult result,
+          //       {VoidCallback refetch, FetchMore fetchMore}) {
+          //     print(result.data["login"]);
+          //     return Text("hello");
+          //   },
+          // )
         ],
       )),
     );

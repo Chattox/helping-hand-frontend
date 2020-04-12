@@ -32,28 +32,28 @@ class MyApp extends StatelessWidget {
 
     return GraphQLProvider(
       client: client,
-      child: Container(
-        child: Query(
-            options: QueryOptions(
-              documentNode: gql(testQuery),
-            ),
-            builder: (QueryResult result,
-                {VoidCallback refetch, FetchMore fetchMore}) {
-              if (result.hasException) {
-                return Text(result.exception.toString());
-              }
+      child: MaterialApp(
+        title: appName,
+        theme: ThemeData(
+          // Define the default brightness and colors.
+          brightness: Brightness.light,
+          primaryColor: Colors.green[300],
+          accentColor: Colors.green[50],
 
-              if (result.loading) {
-                return Text('Loading');
-              }
-              ;
+          // Define the default font family.
+          fontFamily: 'Helvetica',
 
-              if (result.data) {
-                Map<String, dynamic> map = json.decode(result.data);
-              }
-
-              return Text("Hello");
-            }),
+          // Define the default TextTheme. Use this to specify the default
+          // text styling for headlines, titles, bodies of text, and more.
+          textTheme: TextTheme(
+            headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+            title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+            body1: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+          ),
+        ),
+        home: MyHomePage(
+          title: appName,
+        ),
       ),
     );
   }
@@ -72,27 +72,3 @@ class MyApp extends StatelessWidget {
 //           onPressed: null,
 //           child: Icon(Icons.add),
 // //         ),
-
-// MaterialApp(
-//         title: appName,
-//         theme: ThemeData(
-//           // Define the default brightness and colors.
-//           brightness: Brightness.light,
-//           primaryColor: Colors.green[300],
-//           accentColor: Colors.green[50],
-
-//           // Define the default font family.
-//           fontFamily: 'Helvetica',
-
-//           // Define the default TextTheme. Use this to specify the default
-//           // text styling for headlines, titles, bodies of text, and more.
-//           textTheme: TextTheme(
-//             headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-//             title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-//             body1: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
-//           ),
-//         ),
-//         home: MyHomePage(
-//           title: appName,
-//         ),
-//       ),
