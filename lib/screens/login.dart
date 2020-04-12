@@ -1,6 +1,9 @@
+import 'dart:core';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
+  final String screen;
+  Login({Key key, @required this.screen}) : super(key: key);
   @override
   _LoginState createState() => _LoginState();
 }
@@ -20,6 +23,12 @@ class _LoginState extends State<Login> {
         padding: EdgeInsets.all(10.0),
         child: Column(
           children: <Widget>[
+            if (widget.screen == "registration")
+              Padding(
+                  padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: Text('Successful registration. Please log in.',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18))),
             Padding(
               padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
               child: TextField(
@@ -55,7 +64,7 @@ class _LoginState extends State<Login> {
                 "Login",
                 textScaleFactor: 1.2,
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -77,6 +86,22 @@ class _LoginState extends State<Login> {
     print(enteredEmailAddress);
     print(enteredPassword);
   }
+
+  // navigateToPage() {
+  //   if (widget.screen == "volunteer") {
+  //     return Navigator.push(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => VolunteerDashboard()),
+  //     );
+  //   }
+  //   if (widget.screen == "helpee") {
+  //     return Navigator.push(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => HelpeeDashboard()),
+  //     );
+  //   }
+  // }
+
 }
 
 // child: Text(

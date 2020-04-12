@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import './login.dart';
 
 class Registration extends StatefulWidget {
   final String screen;
@@ -217,10 +218,11 @@ class _RegistrationState extends State<Registration> {
                         enteredPostcode = postcodeController.text;
                         enteredStreetAddress = streetAddressController.text;
                         enteredCity = cityController.text;
-
-                        reset();
                       });
+                      reset();
+                      navigateToPage();
                     }
+                    ;
                   },
                 )
               ],
@@ -240,15 +242,6 @@ class _RegistrationState extends State<Registration> {
     streetAddressController.text = "";
     cityController.text = "";
 
-    print(enteredName);
-    print(enteredEmail);
-    print(enteredPassword);
-    print(enteredPhoneNumber);
-    print(enteredPostcode);
-    print(enteredStreetAddress);
-    print(enteredCity);
-    print(enteredDistanceToTravel);
-
     setState(() {
       enteredName = "";
       enteredEmail = "";
@@ -259,14 +252,12 @@ class _RegistrationState extends State<Registration> {
       enteredCity = "";
       enteredDistanceToTravel = 5.0;
     });
+  }
 
-    print(enteredName);
-    print(enteredEmail);
-    print(enteredPassword);
-    print(enteredPhoneNumber);
-    print(enteredPostcode);
-    print(enteredStreetAddress);
-    print(enteredCity);
-    print(enteredDistanceToTravel);
+  navigateToPage() {
+    return Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Login(screen: "registration")),
+    );
   }
 }
