@@ -2,96 +2,79 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import './login.dart';
 import './registration.dart';
-import 'dart:convert';
-import 'package:graphql_flutter/graphql_flutter.dart';
 
 class MyHomePage extends StatelessWidget {
   final String title;
-  String login;
-  final testQuery = '''query TestQuery {
-  login(email: "lehoczki.judit@gmail.com", password: "tester") {
-    name _id email phoneNumber userType postcode
-  }
-}''';
-  MyHomePage({Key key, @required this.title}) : super(key: key);
+  final String login;
+  MyHomePage({Key key, @required this.title, this.login}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).accentColor,
       body: Container(
-          width: 1000.0,
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
-            image: DecorationImage(
-                repeat: ImageRepeat.noRepeat,
-                colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.3), BlendMode.dstATop),
-                image: AssetImage('./images/grocery-cart-with-item.jpg'),
-                fit: BoxFit.cover),
-          ),
-          child: Column(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(top: 180.0),
-                child: Center(
-                  child: Icon(
-                    Icons.shopping_basket,
-                    color: Colors.white,
-                    size: 65.0,
+        width: 1000.0,
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+          image: DecorationImage(
+              repeat: ImageRepeat.noRepeat,
+              colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(0.3), BlendMode.dstATop),
+              image: AssetImage('./images/grocery-cart-with-item.jpg'),
+              fit: BoxFit.cover),
+        ),
+        child: Column(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(top: 180.0),
+              child: Center(
+                child: Icon(
+                  Icons.shopping_basket,
+                  color: Colors.white,
+                  size: 65.0,
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 20.0),
+              child: new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    "Helping",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 20.0),
-                child: new Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "Helping",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  Text(
+                    " Hand",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25.0,
                     ),
-                    Text(
-                      " Hand",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25.0,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Container(
-                margin:
-                    const EdgeInsets.only(left: 30.0, right: 30.0, top: 100.0),
-                alignment: Alignment.center,
-                child: Column(
-                  children: <Widget>[
-                    Button(text: "Login", pageName: "Login"),
-                    Button(
-                        text: "Register as a Volunteer",
-                        pageName: "Registration"),
-                    Button(
-                        text: "I'm in need of help", pageName: "Registration"),
-                  ],
-                ),
-              )
-              // Query(
-              //   options: QueryOptions(
-              //     documentNode: gql(testQuery),
-              //   ),
-              //   builder: (QueryResult result,
-              //       {VoidCallback refetch, FetchMore fetchMore}) {
-              //     print(result.data["login"]);
-              //     return Text("hello");
-              //   },
-              // )
-            ],
-          )),
+            ),
+            Container(
+              margin:
+                  const EdgeInsets.only(left: 30.0, right: 30.0, top: 100.0),
+              alignment: Alignment.center,
+              child: Column(
+                children: <Widget>[
+                  Button(text: "Login", pageName: "Login"),
+                  Button(
+                      text: "Register as a Volunteer",
+                      pageName: "Registration"),
+                  Button(text: "I'm in need of help", pageName: "Registration"),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
@@ -133,7 +116,6 @@ class Button extends StatelessWidget {
         textColor: Theme.of(context).primaryColor,
         color: Colors.white,
         hoverColor: Colors.white60,
-        // Theme.of(context).primaryColorLight,
         onPressed: () {
           switch (text) {
             case 'Login':
