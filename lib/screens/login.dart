@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -15,16 +14,11 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  String enteredEmailAddress = "";
-  String enteredPassword = "";
+  static String enteredEmailAddress = "";
+  static String enteredPassword = "";
   String returnedUserType = "";
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  // final loginQuery = '''query loginQuery {
-  // login(email: "lehoczki.judit@gmail.com", password: "tester") {
-  //   name _id email phoneNumber userType postcode
-  // }
-  // }''';
+  static TextEditingController emailController = TextEditingController();
+  static TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +58,6 @@ class _LoginState extends State<Login> {
                 ),
               ),
             ),
-            // LoginUser(),
             RaisedButton(
               color: Theme.of(context).primaryColor,
               onPressed: () {
@@ -72,16 +65,13 @@ class _LoginState extends State<Login> {
                   enteredEmailAddress = emailController.text;
                   enteredPassword = passwordController.text;
                 });
-                print("on pressed");
-                queryBuilder().then((user) {
-                  // print(user);
+                queryBuilder(enteredEmailAddress, enteredPassword).then((user) {
                   String userType = user["userType"];
                   setState(() {
                     returnedUserType = userType;
                   });
                   return user;
                 }).then((data) {
-                  // print(returnedUserType);
                   if (returnedUserType == "volunteer") {
                     return Navigator.push(
                       context,
@@ -100,9 +90,6 @@ class _LoginState extends State<Login> {
                   }
                   return null;
                 });
-                // print(type);
-                // Future<String> returnedUserType = await queryBuilder();
-                // reset();
               },
               child: Text(
                 "Login",
@@ -115,8 +102,9 @@ class _LoginState extends State<Login> {
     );
   }
 
-  String loginQuery = '''query loginQuery {
-  login(email: "lehoczki.judit@gmail.com", password: "tester") {
+  Future queryBuilder(email, password) async {
+    String loginQuery = '''query loginQuery {
+  login(email: "$email", password: "$password") {
     _id
     name
     email
@@ -143,8 +131,6 @@ class _LoginState extends State<Login> {
     userType
   }
   }''';
-
-  Future queryBuilder() async {
     final HttpLink httpLink = HttpLink(
       uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
     );
@@ -155,135 +141,15 @@ class _LoginState extends State<Login> {
     final response =
         await client.query(QueryOptions(documentNode: gql(loginQuery)));
     Map user = response.data["login"];
-    // print(user);
-    // final userType = json.decode(data.data["login"]["userType"]);
     return user;
   }
 
-  //   void reset() {
-//     print(enteredEmailAddress);
-//     print(enteredPassword);
-// //clears input boxes on screen
-//     emailController.text = "";
-//     passwordController.text = "";
-// //clears state
-//     setState(() {
-//       enteredEmailAddress = "";
-//       enteredPassword = "";
-//     });
-
-//     print(enteredEmailAddress);
-//     print(enteredPassword);
-//   }
-// }
-
-  // loginUser() {
-  //   print("hello");
-  //   return Query(
-  //     options: QueryOptions(
-  //       documentNode: gql(loginQuery),
-  //     ),
-  //     builder: (QueryResult result,
-  //         {VoidCallback refetch, FetchMore fetchMore}) {
-  //       print(result.data["login"]);
-  //       return Text("hello");
-  //     },
-  //   );
-  // }
+  void reset() {
+    emailController.text = "";
+    passwordController.text = "";
+    setState(() {
+      enteredEmailAddress = "";
+      enteredPassword = "";
+    });
+  }
 }
-
-// navigateToPage(userType) {
-//   if (userType == "volunteer") {
-//     return Navigator.push(
-//       context,
-//       MaterialPageRoute(builder: (context) => VolunteerDashboard()),
-//     );
-//   }
-//   if (userType == "helpee") {
-//     return Navigator.push(
-//       context,
-//       MaterialPageRoute(builder: (context) => HelpeeDashboard()),
-//     );
-//   }
-// }
-
-// Future<Query> queryBuilder() async {
-//   print("queryBuilder");
-//   final QueryResult result = await client.query(QueryOptions(
-//       documentNode: gql(loginQuery),
-//     ),
-//     builder: (QueryResult result, {VoidCallback refetch, FetchMore fetchMore}) {
-//       await result
-//       print("hgfdsjhflsajfhasdf");
-//       print(result.data["login"]);
-//       return Text("hello");
-//     },
-//   );
-//   return result;
-// }
-
-// class LoginUser extends StatelessWidget {
-//   const LoginUser({Key key}) : super(key: key);
-//   final loginQuery = '''query loginQuery {
-//   login(email: "lehoczki.judit@gmail.com", password: "tester") {
-//     name _id email phoneNumber userType postcode
-//   }
-//   }''';
-
-//   @override
-//   Widget build(BuildContext context) {
-//     print("in loginUser");
-//     var loginUserQuery = Scaffold(
-//       body: Query(
-//         options: QueryOptions(
-//           documentNode: gql(loginQuery),
-//         ),
-//         builder: (QueryResult result,
-//             {VoidCallback refetch, FetchMore fetchMore}) {
-//           print(result.data["login"]);
-//           return Text("hello");
-//         },
-//       ),
-//     );
-//     return loginUserQuery;
-//   }
-// }
-
-// class LoginQuery extends StatelessWidget {
-//   final query = r"""query LoginUser{
-//   login(email: "lehoczki.judit@gmail.com", password: "tester") {name userType shoppingListId {orderStatus}}
-// }""";
-//   @override
-//   Widget build(BuildContext context) {
-//     return Query();
-//   }
-// }
-
-//  return Query(
-//       options: QueryOptions(document: r"""query LoginUser{
-//   login(email: "lehoczki.judit@gmail.com", password: "tester") {name userType shoppingListId {orderStatus}}
-// }"""),
-//       builder: (
-//         QueryResult result, {
-//         VoidCallback refetch,
-//       }) {
-//         if (result.data == null) {
-//           return Text("No data found");
-//         }
-//         return Text("getting the query result back");
-//       },
-//     );
-
-// child: Text(
-//   'Text with a background color',
-//   style: Theme.of(context).textTheme.title,
-// ),
-// floatingActionButton: Theme(
-//         data: Theme.of(context).copyWith(
-//           colorScheme:
-//               Theme.of(context).colorScheme.copyWith(secondary: Colors.yellow),
-//         ),
-// child: FloatingActionButton(
-//           onPressed: null,
-//           child: Icon(Icons.add),
-//         ),

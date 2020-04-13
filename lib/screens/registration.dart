@@ -222,7 +222,6 @@ class _RegistrationState extends State<Registration> {
                       reset();
                       navigateToPage();
                     }
-                    ;
                   },
                 )
               ],

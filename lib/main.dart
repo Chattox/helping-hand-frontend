@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import './screens/home.dart';
-import 'dart:convert';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   final HttpLink httpLink = HttpLink(
     uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
   );
@@ -19,11 +19,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final testQuery = '''query TestQuery {
-  users {
-    name
-  }
-}''';
   final client;
   MyApp({Key key, @required this.client}) : super(key: key);
   @override
@@ -60,17 +55,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// child: Text(
-//   'Text with a background color',
-//   style: Theme.of(context).textTheme.title,
-// ),
-// floatingActionButton: Theme(
-//         data: Theme.of(context).copyWith(
-//           colorScheme:
-//               Theme.of(context).colorScheme.copyWith(secondary: Colors.yellow),
-//         ),
-// child: FloatingActionButton(
-//           onPressed: null,
-//           child: Icon(Icons.add),
-// //         ),
