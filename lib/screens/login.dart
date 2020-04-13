@@ -1,7 +1,10 @@
 import 'dart:core';
 import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import './dashboardHelpee.dart';
+import './dashboardVolunteer.dart';
 
 class Login extends StatefulWidget {
   final String screen;
@@ -14,6 +17,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   String enteredEmailAddress = "";
   String enteredPassword = "";
+  String returnedUserType = "";
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   // final loginQuery = '''query loginQuery {
@@ -69,7 +73,35 @@ class _LoginState extends State<Login> {
                   enteredPassword = passwordController.text;
                 });
                 print("on pressed");
-                queryBuilder();
+                queryBuilder().then((user) {
+                  // print(user);
+                  String userType = user["userType"];
+                  setState(() {
+                    returnedUserType = userType;
+                  });
+                  return user;
+                }).then((data) {
+                  // print(returnedUserType);
+                  if (returnedUserType == "volunteer") {
+                    return Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              VolunteerDashboard(userData: data)),
+                    );
+                  }
+                  if (returnedUserType == "helpee") {
+                    return Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              HelpeeDashboard(userData: data)),
+                    );
+                  }
+                  return null;
+                });
+                // print(type);
+                // Future<String> returnedUserType = await queryBuilder();
                 // reset();
               },
               child: Text(
@@ -83,7 +115,52 @@ class _LoginState extends State<Login> {
     );
   }
 
-//   void reset() {
+  String loginQuery = '''query loginQuery {
+  login(email: "lehoczki.judit@gmail.com", password: "tester") {
+    _id
+    name
+    email
+    phoneNumber
+    postcode
+    streetAddress
+    city
+    distanceToTravel
+    profilePhoto
+    shoppingListId {
+      _id
+      orderStatus
+      helpee {
+        name
+      }
+      volunteer {
+        name
+      }
+      listImage
+      listText
+      createdAt
+      updatedAt
+    }
+    userType
+  }
+  }''';
+
+  Future queryBuilder() async {
+    final HttpLink httpLink = HttpLink(
+      uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
+    );
+    GraphQLClient client = GraphQLClient(
+      cache: InMemoryCache(),
+      link: httpLink,
+    );
+    final response =
+        await client.query(QueryOptions(documentNode: gql(loginQuery)));
+    Map user = response.data["login"];
+    // print(user);
+    // final userType = json.decode(data.data["login"]["userType"]);
+    return user;
+  }
+
+  //   void reset() {
 //     print(enteredEmailAddress);
 //     print(enteredPassword);
 // //clears input boxes on screen
@@ -115,29 +192,20 @@ class _LoginState extends State<Login> {
   // }
 }
 
-final loginQuery = '''query loginQuery {
-  login(email: "lehoczki.judit@gmail.com", password: "tester") {
-    name _id email phoneNumber userType postcode
-  }
-  }''';
-
-Future queryBuilder() async {
-  final HttpLink httpLink = HttpLink(
-    uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
-  );
-
-  GraphQLClient client = GraphQLClient(
-    cache: InMemoryCache(),
-    link: httpLink,
-  );
-
-  final QueryResult data = await client.query(QueryOptions(
-    documentNode: gql(loginQuery),
-  ));
-  print(data.data["login"]["name"]);
-  final episodes = json.decode(data.data["login"]["name"]);
-  return Text(episodes);
-}
+// navigateToPage(userType) {
+//   if (userType == "volunteer") {
+//     return Navigator.push(
+//       context,
+//       MaterialPageRoute(builder: (context) => VolunteerDashboard()),
+//     );
+//   }
+//   if (userType == "helpee") {
+//     return Navigator.push(
+//       context,
+//       MaterialPageRoute(builder: (context) => HelpeeDashboard()),
+//     );
+//   }
+// }
 
 // Future<Query> queryBuilder() async {
 //   print("queryBuilder");
@@ -205,20 +273,6 @@ Future queryBuilder() async {
 //         return Text("getting the query result back");
 //       },
 //     );
-// navigateToPage() {
-//   if (widget.screen == "volunteer") {
-//     return Navigator.push(
-//       context,
-//       MaterialPageRoute(builder: (context) => VolunteerDashboard()),
-//     );
-//   }
-//   if (widget.screen == "helpee") {
-//     return Navigator.push(
-//       context,
-//       MaterialPageRoute(builder: (context) => HelpeeDashboard()),
-//     );
-//   }
-// }
 
 // child: Text(
 //   'Text with a background color',
