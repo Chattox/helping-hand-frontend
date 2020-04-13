@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   final HttpLink httpLink = HttpLink(
     uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
   );
@@ -19,11 +20,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final testQuery = '''query TestQuery {
-  users {
-    name
-  }
-}''';
   final client;
   MyApp({Key key, @required this.client}) : super(key: key);
   @override

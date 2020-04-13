@@ -15,11 +15,11 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  String enteredEmailAddress = "";
-  String enteredPassword = "";
+  static String enteredEmailAddress = "";
+  static String enteredPassword = "";
   String returnedUserType = "";
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  static TextEditingController emailController = TextEditingController();
+  static TextEditingController passwordController = TextEditingController();
   // final loginQuery = '''query loginQuery {
   // login(email: "lehoczki.judit@gmail.com", password: "tester") {
   //   name _id email phoneNumber userType postcode
@@ -73,7 +73,7 @@ class _LoginState extends State<Login> {
                   enteredPassword = passwordController.text;
                 });
                 print("on pressed");
-                queryBuilder().then((user) {
+                queryBuilder(enteredEmailAddress, enteredPassword).then((user) {
                   // print(user);
                   String userType = user["userType"];
                   setState(() {
@@ -115,8 +115,9 @@ class _LoginState extends State<Login> {
     );
   }
 
-  String loginQuery = '''query loginQuery {
-  login(email: "lehoczki.judit@gmail.com", password: "tester") {
+  Future queryBuilder(email, password) async {
+    String loginQuery = '''query loginQuery {
+  login(email: "$email", password: "$password") {
     _id
     name
     email
@@ -143,8 +144,6 @@ class _LoginState extends State<Login> {
     userType
   }
   }''';
-
-  Future queryBuilder() async {
     final HttpLink httpLink = HttpLink(
       uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
     );
