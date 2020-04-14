@@ -12,7 +12,7 @@ class HelpeeDashboard extends StatefulWidget {
 class _HelpeeDashboardState extends State<HelpeeDashboard> {
   @override
   Widget build(BuildContext context) {
-    print(widget.userData["name"]);
+    print("${widget.userData["name"]} log inside helpee dashboard");
     print(widget.userData);
     if (widget.userData["shoppingListId"].length == 0) {
       return ImageCapture(userId: widget.userData["_id"]);
