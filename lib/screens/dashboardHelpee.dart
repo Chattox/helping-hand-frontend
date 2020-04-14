@@ -12,6 +12,33 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
   @override
   Widget build(BuildContext context) {
     print(widget.userData["name"]);
-    return Text("Helpee");
+
+    return Scaffold(
+      appBar: AppBar(title: Text("Dashboard")),
+      backgroundColor: Theme.of(context).accentColor,
+      body: Container(
+        padding: EdgeInsets.all(10.0),
+        child: Column(children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+            child: Text("My Current Shopping Order"),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+            child: Text("placeholder for photo of current shopping list"),
+          ),
+          RaisedButton(
+            color: Theme.of(context).primaryColor,
+            onPressed: () {
+              //send mutation to update shoppinglist status <<<<<<
+            },
+            child: Text(
+              "Order Received",
+              textScaleFactor: 1.2,
+            ),
+          )
+        ]),
+      ),
+    );
   }
 }
