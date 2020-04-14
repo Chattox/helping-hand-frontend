@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
 import './imageCapture.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 class HelpeeDashboard extends StatefulWidget {
   final Map userData;
@@ -10,9 +11,18 @@ class HelpeeDashboard extends StatefulWidget {
 }
 
 class _HelpeeDashboardState extends State<HelpeeDashboard> {
+  Map shoppingListData;
+
   @override
+  void initState() {
+    super.initState();
+    queryBuilder(widget.userData["shoppingListId"][0]["_id"])
+        .then((shoppingList) {
+      shoppingListData = shoppingList;
+    });
+  }
+
   Widget build(BuildContext context) {
-    print("${widget.userData["name"]} log inside helpee dashboard");
     print(widget.userData);
     if (widget.userData["shoppingListId"].length == 0) {
       return ImageCapture(userId: widget.userData["_id"]);
@@ -44,6 +54,34 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
           ]),
         ),
       );
+    }
+  }
+
+  Future queryBuilder(shoppingListId) async {
+    String shoppingListQuery = '''query shoppingListQuery {
+  shoppingListById(id: "$shoppingListId") {
+    listImage
+    orderStatus
+    createdAt
+    updatedAt
+}
+}''';
+    final HttpLink httpLink = HttpLink(
+      uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
+    );
+    GraphQLClient client = GraphQLClient(
+      cache: InMemoryCache(),
+      link: httpLink,
+    );
+    final response =
+        await client.query(QueryOptions(documentNode: gql(shoppingListQuery)));
+
+    if (response.loading) {
+      return CircularProgressIndicator(backgroundColor: Colors.green);
+    } else {
+      print("SHOPPING LIST DATAAAA >>>> ${response.data}");
+      Map shoppingList = response.data;
+      return shoppingList;
     }
   }
 }
