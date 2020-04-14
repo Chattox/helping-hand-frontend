@@ -49,7 +49,6 @@ class _ImageCaptureState extends State<ImageCapture> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.userId);
     return Scaffold(
       appBar: AppBar(title: Text("Add Your Shopping List")),
       backgroundColor: Theme.of(context).accentColor,
@@ -138,7 +137,6 @@ class _UploaderState extends State<Uploader> {
   StorageUploadTask _uploadTask;
 
   _startUpload() async {
-    print(widget.userId);
     String filePath =
         'images/${widget.userId}.png'; // <<< file name needs changing if we want multiple files per user
 
@@ -149,14 +147,11 @@ class _UploaderState extends State<Uploader> {
     var downUrl = await (await _uploadTask.onComplete).ref.getDownloadURL();
     var url = downUrl.toString();
 
-    print("Download URL: $url");
-
     queryBuilder(widget.userId, url);
     return url;
   }
 
   Future queryBuilder(userId, url) async {
-    print("The values are: $userId, $url");
     String shoppingListQuery = '''mutation shoppingListQuery {
   createShoppingList(shoppingListInput: {helpee: "$userId", listImage: "$url"}) {listImage
   }
@@ -170,8 +165,7 @@ class _UploaderState extends State<Uploader> {
     );
     final response = await client
         .mutate(MutationOptions(documentNode: gql(shoppingListQuery)));
-    print(">>>>>> ${response.data}");
-    String imageUrl = response.data;
+    Map<String, dynamic> imageUrl = response.data;
     return imageUrl;
   }
 
