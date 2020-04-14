@@ -7,7 +7,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageCapture extends StatefulWidget {
-  ImageCapture({Key key}) : super(key: key);
+  final String userId;
+  ImageCapture({Key key, @required this.userId}) : super(key: key);
 
   @override
   _ImageCaptureState createState() => _ImageCaptureState();
@@ -48,6 +49,7 @@ class _ImageCaptureState extends State<ImageCapture> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.userId);
     return Scaffold(
       appBar: AppBar(title: Text("Add Your Shopping List")),
       backgroundColor: Theme.of(context).accentColor,
@@ -111,7 +113,7 @@ class _ImageCaptureState extends State<ImageCapture> {
                   )
                 ],
               ),
-              Uploader(file: _imageFile)
+              Uploader(file: _imageFile, userId: widget.userId)
             ]
           ],
         ),
@@ -122,8 +124,8 @@ class _ImageCaptureState extends State<ImageCapture> {
 
 class Uploader extends StatefulWidget {
   final File file;
-
-  Uploader({Key key, this.file}) : super(key: key);
+  final String userId;
+  Uploader({Key key, this.file, this.userId}) : super(key: key);
 
   @override
   _UploaderState createState() => _UploaderState();
@@ -136,7 +138,9 @@ class _UploaderState extends State<Uploader> {
   StorageUploadTask _uploadTask;
 
   void _startUpload() {
-    String filePath = 'images/${DateTime.now()}.png';
+    print(widget.userId);
+    String filePath =
+        'images/${widget.userId}.png'; // <<< file name needs changing if we want multiple files per user
 
     setState(() {
       _uploadTask = _storage.ref().child(filePath).putFile(widget.file);

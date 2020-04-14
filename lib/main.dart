@@ -49,10 +49,10 @@ class MyApp extends StatelessWidget {
             body1: TextStyle(fontSize: 14.0, fontFamily: 'Roboto'),
           ),
         ),
-        home: ImageCapture(),
-        // home: MyHomePage(
-        //   title: appName,
-        // ),
+        // home: ImageCapture(),
+        home: MyHomePage(
+          title: appName,
+        ),
       ),
     );
   }
