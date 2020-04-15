@@ -5,6 +5,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import './dashboardHelpee.dart';
 
 class ImageCapture extends StatefulWidget {
   final String userId;
@@ -50,7 +51,10 @@ class _ImageCaptureState extends State<ImageCapture> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Add Your Shopping List")),
+      appBar: AppBar(
+        title: Text("Add Your Shopping List"),
+        automaticallyImplyLeading: false,
+      ),
       backgroundColor: Theme.of(context).accentColor,
       body: Center(
         child: Column(
@@ -169,6 +173,36 @@ class _UploaderState extends State<Uploader> {
     return imageUrl;
   }
 
+  Future userDataBuilder(userId) async {
+    String userQuery = '''query userQuery {
+   userById(id: "$userId") {
+    _id
+    name
+    email
+    phoneNumber
+    postcode
+    streetAddress
+    city
+    distanceToTravel
+    profilePhoto
+    shoppingListId {
+      _id
+      }
+  }
+  }''';
+    final HttpLink httpLink = HttpLink(
+      uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
+    );
+    GraphQLClient client = GraphQLClient(
+      cache: InMemoryCache(),
+      link: httpLink,
+    );
+    final response =
+        await client.query(QueryOptions(documentNode: gql(userQuery)));
+    Map user = response.data["userById"];
+    return user;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_uploadTask != null) {
@@ -185,17 +219,26 @@ class _UploaderState extends State<Uploader> {
               children: <Widget>[
                 if (_uploadTask.isComplete)
                   Text("Shopping list has been uploaded"),
-                if (_uploadTask.isPaused)
-                  FlatButton(
-                    child: Icon(Icons.play_arrow),
-                    onPressed: _uploadTask.resume,
+                Container(
+                  margin: EdgeInsets.only(top: 20.0),
+                  width: 280.0,
+                  child: FlatButton.icon(
+                    color: Theme.of(context).primaryColor,
+                    label: Text("Back"),
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      userDataBuilder(widget.userId).then((data) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    HelpeeDashboard(userData: data)));
+                      });
+                    },
                   ),
+                ),
                 if (_uploadTask.isInProgress)
-                  FlatButton(
-                    child: Icon(Icons.pause),
-                    onPressed: _uploadTask.pause,
-                  ),
-                LinearProgressIndicator(value: progressPercent)
+                  LinearProgressIndicator(value: progressPercent)
               ],
             );
           });

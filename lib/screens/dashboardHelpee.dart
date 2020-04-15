@@ -6,7 +6,7 @@ import 'package:transparent_image/transparent_image.dart';
 
 class HelpeeDashboard extends StatefulWidget {
   final Map userData;
-  HelpeeDashboard({Key key, @required this.userData}) : super(key: key);
+  HelpeeDashboard({Key key, this.userData}) : super(key: key);
   @override
   _HelpeeDashboardState createState() => _HelpeeDashboardState();
 }
@@ -40,7 +40,7 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
   }
 
   Widget build(BuildContext context) {
-    print(shoppingListData);
+    print(widget.userData);
     if (widget.userData["shoppingListId"].length == 0) {
       return ImageCapture(userId: widget.userData["_id"]);
     }
@@ -79,7 +79,6 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
                 if (shoppingListData["volunteer"] == null)
                   Padding(
                     padding: EdgeInsets.only(bottom: 7.5),
-                    //add conditional logic -- is volunteer null ? then show text, if not show something else
                     child: Text(
                       "Volunteer is not yet assigned to your order. \nPlease check back later",
                       textAlign: TextAlign.center,
