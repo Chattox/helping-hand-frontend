@@ -76,14 +76,20 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
                   padding: EdgeInsets.only(bottom: 7.5),
                   child: Text("Date created: $parsedDate"),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 7.5),
-                  child: Text("Volunteer assigned is: Not yet available"),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 20.0),
-                  child: Text("Contact your volunteer: Phone number here"),
-                ),
+                if (shoppingListData["volunteer"] == null)
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 7.5),
+                    //add conditional logic -- is volunteer null ? then show text, if not show something else
+                    child: Text(
+                      "Volunteer is not yet assigned to your order. \nPlease check back later",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                if (shoppingListData["volunteer"] != null)
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 20.0),
+                    child: Text("Contact volunteer: phone number"),
+                  ),
                 RaisedButton(
                   color: Theme.of(context).primaryColor,
                   onPressed: () {
