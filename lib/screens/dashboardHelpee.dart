@@ -14,6 +14,7 @@ class HelpeeDashboard extends StatefulWidget {
 class _HelpeeDashboardState extends State<HelpeeDashboard> {
   Map shoppingListData;
   DateTime parsedDate;
+  bool orderReceived = false;
 
   void setShoppingList(shoppingList) {
     var date = new DateTime.fromMicrosecondsSinceEpoch(
@@ -22,7 +23,6 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
     setState(() {
       shoppingListData = shoppingList;
       parsedDate = date;
-      print(parsedDate);
     });
   }
 
@@ -32,7 +32,7 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
     if (widget.userData["shoppingListId"].length == 0) {
       return null;
     } else {
-      queryBuilder(widget.userData["shoppingListId"][0]["_id"])
+      shoppingListBuilder(widget.userData["shoppingListId"][0]["_id"])
           .then((shoppingList) {
         setShoppingList(shoppingList);
       });
@@ -40,7 +40,6 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
   }
 
   Widget build(BuildContext context) {
-    print(widget.userData);
     if (widget.userData["shoppingListId"].length == 0) {
       return ImageCapture(userId: widget.userData["_id"]);
     }
@@ -89,16 +88,27 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
                     padding: EdgeInsets.only(bottom: 20.0),
                     child: Text("Contact volunteer: phone number"),
                   ),
-                RaisedButton(
-                  color: Theme.of(context).primaryColor,
-                  onPressed: () {
-                    //send mutation to update shoppinglist status <<<<<<
-                  },
-                  child: Text(
-                    "Order Received",
-                    textScaleFactor: 1.2,
+                if (orderReceived == false)
+                  RaisedButton(
+                    color: Theme.of(context).primaryColor,
+                    onPressed: () {
+                      updateShoppingListStatus(
+                              widget.userData["shoppingListId"][0]["_id"])
+                          .then((data) {
+                        setState(() {
+                          orderReceived = true;
+                        });
+                      });
+                    },
+                    child: Text(
+                      "Order Received",
+                      textScaleFactor: 1.2,
+                    ),
                   ),
-                )
+                if (orderReceived == true)
+                  Container(
+                      margin: EdgeInsets.only(top: 10.0),
+                      child: Text("You have marked your order as complete."))
               ],
             ),
           ),
@@ -107,7 +117,7 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
     }
   }
 
-  Future queryBuilder(shoppingListId) async {
+  Future shoppingListBuilder(shoppingListId) async {
     String shoppingListQuery = '''query shoppingListQuery {
   shoppingListById(id: "$shoppingListId") {
     listImage
@@ -132,5 +142,26 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
       Map shoppingList = response.data["shoppingListById"];
       return shoppingList;
     }
+  }
+
+  Future updateShoppingListStatus(shoppingListId) async {
+    String shoppingListQuery = '''mutation shoppingListUpdate {
+  updateShoppingList(listId: "$shoppingListId" helpeeComplete: true) {
+    orderStatus
+    updatedAt
+}
+}''';
+    final HttpLink httpLink = HttpLink(
+      uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
+    );
+    GraphQLClient client = GraphQLClient(
+      cache: InMemoryCache(),
+      link: httpLink,
+    );
+    final response =
+        await client.query(QueryOptions(documentNode: gql(shoppingListQuery)));
+    Map shoppingListUpdates = response.data["updateShoppingList"];
+    print(response.data);
+    return shoppingListUpdates;
   }
 }
