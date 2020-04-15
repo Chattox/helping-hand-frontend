@@ -1,7 +1,8 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:intl/intl.dart';
+import './shoppingListDetailed.dart';
+import '../transformers.dart';
 
 class VolunteerDashboard extends StatefulWidget {
   final Map userData;
@@ -35,7 +36,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.green))));
     } else {
       return Scaffold(
-        appBar: AppBar(title: Text("Neighbours To Help")),
+        appBar: AppBar(title: Text("Your Neighbours Needing Help")),
         backgroundColor: Theme.of(context).accentColor,
         body: Column(
           children: [
@@ -51,10 +52,28 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                       formatDate(shoppingListsData[index]["createdAt"]);
                   return Card(
                     child: ListTile(
-                      leading: Icon(Icons.format_list_bulleted),
+                      leading: (shoppingListsData[index]["listImage"] != null)
+                          ? CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                  shoppingListsData[index]["listImage"]),
+                            )
+                          : Icon(Icons.format_list_bulleted,
+                              color: Theme.of(context).primaryColor,
+                              size: 40.0),
                       title: Text(shoppingListsData[index]["helpee"]["name"]),
                       subtitle: Text(formattedDate),
-                      trailing: Icon(Icons.arrow_forward_ios),
+                      trailing: Icon(Icons.arrow_forward_ios,
+                          color: Theme.of(context).primaryColor),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => shoppingListDetailed(
+                              shoppingListData: shoppingListsData[index],
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   );
                 },
@@ -67,14 +86,22 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
   }
 
   Future queryBuilder() async {
+    print(widget.userData["_id"]);
     String shoppingListsQuery = '''query shoppingListsQuery{
-  filterByDistance(target: "5e95d91699c1d600177feb67") {
-    _id
+  filterByDistance(target: "${widget.userData["_id"]}") {
+		_id
+    orderStatus
     helpee {
       name
       locationLatLng
-    }
+      phoneNumber
+      postcode
+      streetAddress
+      city
+    } 
+    listImage   
     createdAt
+    updatedAt
   }
 }''';
     final HttpLink httpLink = HttpLink(
@@ -93,12 +120,4 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
       return shoppingListsRaw;
     }
   }
-}
-
-formatDate(date) {
-  var number = int.parse(date);
-  assert(number is int);
-  var formattedDate = DateTime.fromMillisecondsSinceEpoch(number);
-  var doubleformattedDate = DateFormat.yMMMMEEEEd().format(formattedDate);
-  return doubleformattedDate;
 }
