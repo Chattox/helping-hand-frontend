@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -49,7 +49,6 @@ class _ImageCaptureState extends State<ImageCapture> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.userId);
     return Scaffold(
       appBar: AppBar(title: Text("Add Your Shopping List")),
       backgroundColor: Theme.of(context).accentColor,
@@ -137,14 +136,37 @@ class _UploaderState extends State<Uploader> {
 
   StorageUploadTask _uploadTask;
 
-  void _startUpload() {
-    print(widget.userId);
+  _startUpload() async {
     String filePath =
         'images/${widget.userId}.png'; // <<< file name needs changing if we want multiple files per user
 
     setState(() {
       _uploadTask = _storage.ref().child(filePath).putFile(widget.file);
     });
+
+    var downUrl = await (await _uploadTask.onComplete).ref.getDownloadURL();
+    var url = downUrl.toString();
+
+    queryBuilder(widget.userId, url);
+    return url;
+  }
+
+  Future queryBuilder(userId, url) async {
+    String shoppingListQuery = '''mutation shoppingListQuery {
+  createShoppingList(shoppingListInput: {helpee: "$userId", listImage: "$url"}) {listImage
+  }
+}''';
+    final HttpLink httpLink = HttpLink(
+      uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
+    );
+    GraphQLClient client = GraphQLClient(
+      cache: InMemoryCache(),
+      link: httpLink,
+    );
+    final response = await client
+        .mutate(MutationOptions(documentNode: gql(shoppingListQuery)));
+    Map<String, dynamic> imageUrl = response.data;
+    return imageUrl;
   }
 
   @override

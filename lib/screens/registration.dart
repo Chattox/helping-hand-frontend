@@ -220,8 +220,6 @@ class _RegistrationState extends State<Registration> {
                         enteredStreetAddress = streetAddressController.text;
                         enteredCity = cityController.text;
                       });
-
-                      print(enteredName);
                       queryBuilder(
                               widget.screen,
                               enteredName,
@@ -233,7 +231,7 @@ class _RegistrationState extends State<Registration> {
                               enteredCity,
                               enteredDistanceToTravel)
                           .then((data) {
-                        if (data.createUser["name"] != null) {
+                        if (data["createUser"]["name"] != null) {
                           navigateToPage();
                           reset();
                         }
@@ -271,7 +269,7 @@ class _RegistrationState extends State<Registration> {
   }
 
   navigateToPage() {
-    return Navigator.push(
+    Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Login(screen: "registration")),
     );
@@ -279,8 +277,6 @@ class _RegistrationState extends State<Registration> {
 
   Future queryBuilder(userType, name, email, password, phoneNumber, postcode,
       streetAddress, city, distanceToTravel) async {
-    print(
-        'The values are $userType, $name, $email, $password, $phoneNumber, $postcode, $streetAddress, $city, $distanceToTravel');
     String registrationQuery = '''mutation registrationQuery {
   createUser(userInput: {name: "$name" email: "$email" phoneNumber: "$phoneNumber" password: "$password" postcode: "$postcode" streetAddress: "$streetAddress" city: "$city" distanceToTravel: $distanceToTravel userType: "$userType"}) {
     name
@@ -295,8 +291,12 @@ class _RegistrationState extends State<Registration> {
     );
     final response = await client
         .mutate(MutationOptions(documentNode: gql(registrationQuery)));
-    print(response.data);
-    Map user = response.data;
-    return user;
+
+    if (response.loading) {
+      return CircularProgressIndicator(backgroundColor: Colors.green);
+    } else {
+      Map user = response.data;
+      return user;
+    }
   }
 }

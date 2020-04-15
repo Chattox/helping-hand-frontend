@@ -116,17 +116,6 @@ class _LoginState extends State<Login> {
     profilePhoto
     shoppingListId {
       _id
-      orderStatus
-      helpee {
-        name
-      }
-      volunteer {
-        name
-      }
-      listImage
-      listText
-      createdAt
-      updatedAt
     }
     userType
   }
