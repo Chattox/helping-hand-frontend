@@ -22,10 +22,14 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
   @override
   void initState() {
     super.initState();
-    queryBuilder(widget.userData["shoppingListId"][0]["_id"])
-        .then((shoppingList) {
-      setShoppingList(shoppingList);
-    });
+    if (widget.userData["shoppingListId"].length == 0) {
+      return null;
+    } else {
+      queryBuilder(widget.userData["shoppingListId"][0]["_id"])
+          .then((shoppingList) {
+        setShoppingList(shoppingList);
+      });
+    }
   }
 
   Widget build(BuildContext context) {
