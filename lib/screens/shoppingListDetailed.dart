@@ -20,13 +20,23 @@ class shoppingListDetailed extends StatelessWidget {
         child: Center(
           child: Column(
             children: [
-              Padding(
-                padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                child: FadeInImage.memoryNetwork(
-                  placeholder: kTransparentImage,
-                  image: '${shoppingListData["listImage"]}',
-                  imageSemanticLabel: 'My Shopping List',
-                  height: 325.0,
+              Container(
+                margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                child: Padding(
+                  padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                      color: Theme.of(context).primaryColor,
+                      width: 3,
+                    )),
+                    child: FadeInImage.memoryNetwork(
+                      placeholder: kTransparentImage,
+                      image: '${shoppingListData["listImage"]}',
+                      imageSemanticLabel: 'My Shopping List',
+                      height: 325.0,
+                    ),
+                  ),
                 ),
               ),
               Padding(
@@ -34,6 +44,13 @@ class shoppingListDetailed extends StatelessWidget {
                 child: Text(
                     "${shoppingListData["helpee"]["name"]} sent this request on $formattedDate"),
               ),
+              RaisedButton(
+                  color: Theme.of(context).primaryColor,
+                  onPressed: null,
+                  child: Text(
+                    "Help ${shoppingListData["helpee"]["name"]}!",
+                    textScaleFactor: 1.2,
+                  ))
             ],
           ),
         ),

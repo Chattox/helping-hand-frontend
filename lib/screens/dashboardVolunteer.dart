@@ -52,18 +52,27 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                       formatDate(shoppingListsData[index]["createdAt"]);
                   return Card(
                     child: ListTile(
-                      leading: Icon(Icons.format_list_bulleted),
+                      leading: (shoppingListsData[index]["listImage"] != null)
+                          ? CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                  shoppingListsData[index]["listImage"]),
+                            )
+                          : Icon(Icons.format_list_bulleted,
+                              color: Theme.of(context).primaryColor,
+                              size: 40.0),
                       title: Text(shoppingListsData[index]["helpee"]["name"]),
                       subtitle: Text(formattedDate),
-                      trailing: Icon(Icons.arrow_forward_ios),
+                      trailing: Icon(Icons.arrow_forward_ios,
+                          color: Theme.of(context).primaryColor),
                       onTap: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => shoppingListDetailed(
-                                      shoppingListData:
-                                          shoppingListsData[index],
-                                    )));
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => shoppingListDetailed(
+                              shoppingListData: shoppingListsData[index],
+                            ),
+                          ),
+                        );
                       },
                     ),
                   );
