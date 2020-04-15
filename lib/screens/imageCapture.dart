@@ -217,28 +217,41 @@ class _UploaderState extends State<Uploader> {
 
             return Column(
               children: <Widget>[
-                if (_uploadTask.isComplete)
-                  Text("Shopping list has been uploaded"),
-                Container(
-                  margin: EdgeInsets.only(top: 20.0),
-                  width: 280.0,
-                  child: FlatButton.icon(
-                    color: Theme.of(context).primaryColor,
-                    label: Text("Back"),
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () {
-                      userDataBuilder(widget.userId).then((data) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    HelpeeDashboard(userData: data)));
-                      });
-                    },
-                  ),
-                ),
                 if (_uploadTask.isInProgress)
-                  LinearProgressIndicator(value: progressPercent)
+                  Padding(
+                      padding: EdgeInsets.only(top: 10.0),
+                      child: LinearProgressIndicator(
+                        value: progressPercent,
+                        backgroundColor: Colors.green,
+                      )),
+                if (_uploadTask.isInProgress)
+                  Padding(
+                      padding: EdgeInsets.only(top: 10.0),
+                      child:
+                          Text("${(progressPercent * 100).ceil()}% complete")),
+                if (_uploadTask.isComplete)
+                  Padding(
+                      padding: EdgeInsets.only(top: 10.0),
+                      child: Text("Shopping list has been uploaded")),
+                if (_uploadTask.isComplete)
+                  Container(
+                    margin: EdgeInsets.only(top: 20.0),
+                    width: 280.0,
+                    child: FlatButton.icon(
+                      color: Theme.of(context).primaryColor,
+                      label: Text("See My Shopping List"),
+                      icon: Icon(Icons.arrow_back),
+                      onPressed: () {
+                        userDataBuilder(widget.userId).then((data) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      HelpeeDashboard(userData: data)));
+                        });
+                      },
+                    ),
+                  ),
               ],
             );
           });

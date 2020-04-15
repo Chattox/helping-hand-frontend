@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import './screens/home.dart';
-import './screens/imageCapture.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import './screens/login.dart';
+import './screens/home.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +20,11 @@ void main() {
   runApp(MyApp(client: client));
 }
 
+class Routes {
+  static const String loginPage = '/login';
+  static const String homePage = '/';
+}
+
 class MyApp extends StatelessWidget {
   final client;
   MyApp({Key key, @required this.client}) : super(key: key);
@@ -29,6 +35,9 @@ class MyApp extends StatelessWidget {
     return GraphQLProvider(
       client: client,
       child: MaterialApp(
+        routes: {
+          Routes.loginPage: (BuildContext context) => Login(screen: 'helpee'),
+        },
         title: appName,
         theme: ThemeData(
           // Define the default brightness and colors.

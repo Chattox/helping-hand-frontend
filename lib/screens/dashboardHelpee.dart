@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
+import 'package:helping_hand_frontend/screens/login.dart';
 import './imageCapture.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -14,6 +15,7 @@ class HelpeeDashboard extends StatefulWidget {
 class _HelpeeDashboardState extends State<HelpeeDashboard> {
   Map shoppingListData;
   DateTime parsedDate;
+  bool orderReceived = false;
 
   void setShoppingList(shoppingList) {
     var date = new DateTime.fromMicrosecondsSinceEpoch(
@@ -22,7 +24,6 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
     setState(() {
       shoppingListData = shoppingList;
       parsedDate = date;
-      print(parsedDate);
     });
   }
 
@@ -32,7 +33,7 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
     if (widget.userData["shoppingListId"].length == 0) {
       return null;
     } else {
-      queryBuilder(widget.userData["shoppingListId"][0]["_id"])
+      shoppingListBuilder(widget.userData["shoppingListId"][0]["_id"])
           .then((shoppingList) {
         setShoppingList(shoppingList);
       });
@@ -40,7 +41,6 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
   }
 
   Widget build(BuildContext context) {
-    print(widget.userData);
     if (widget.userData["shoppingListId"].length == 0) {
       return ImageCapture(userId: widget.userData["_id"]);
     }
@@ -51,8 +51,21 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.green))));
     } else {
       return Scaffold(
-        appBar: AppBar(title: Text("Current Shopping Order")),
+        appBar: AppBar(
+          title: Text("Current Shopping Order"),
+          automaticallyImplyLeading: false,
+        ),
         backgroundColor: Theme.of(context).accentColor,
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Theme.of(context).primaryColor,
+          tooltip: 'Add a new shopping list',
+          child: Text("Logout"),
+          elevation: 2.0,
+          onPressed: () {
+            return Navigator.of(context)
+                .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+          },
+        ),
         body: Container(
           padding: EdgeInsets.all(10.0),
           child: Center(
@@ -89,16 +102,27 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
                     padding: EdgeInsets.only(bottom: 20.0),
                     child: Text("Contact volunteer: phone number"),
                   ),
-                RaisedButton(
-                  color: Theme.of(context).primaryColor,
-                  onPressed: () {
-                    //send mutation to update shoppinglist status <<<<<<
-                  },
-                  child: Text(
-                    "Order Received",
-                    textScaleFactor: 1.2,
+                if (orderReceived == false)
+                  RaisedButton(
+                    color: Theme.of(context).primaryColor,
+                    onPressed: () {
+                      updateShoppingListStatus(
+                              widget.userData["shoppingListId"][0]["_id"])
+                          .then((data) {
+                        setState(() {
+                          orderReceived = true;
+                        });
+                      });
+                    },
+                    child: Text(
+                      "Order Received",
+                      textScaleFactor: 1.2,
+                    ),
                   ),
-                )
+                if (orderReceived == true)
+                  Container(
+                      margin: EdgeInsets.only(top: 10.0),
+                      child: Text("You have marked your order as complete."))
               ],
             ),
           ),
@@ -107,7 +131,7 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
     }
   }
 
-  Future queryBuilder(shoppingListId) async {
+  Future shoppingListBuilder(shoppingListId) async {
     String shoppingListQuery = '''query shoppingListQuery {
   shoppingListById(id: "$shoppingListId") {
     listImage
@@ -132,5 +156,25 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
       Map shoppingList = response.data["shoppingListById"];
       return shoppingList;
     }
+  }
+
+  Future updateShoppingListStatus(shoppingListId) async {
+    String shoppingListQuery = '''mutation shoppingListUpdate {
+  updateShoppingList(listId: "$shoppingListId" helpeeComplete: true) {
+    orderStatus
+    updatedAt
+}
+}''';
+    final HttpLink httpLink = HttpLink(
+      uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
+    );
+    GraphQLClient client = GraphQLClient(
+      cache: InMemoryCache(),
+      link: httpLink,
+    );
+    final response =
+        await client.query(QueryOptions(documentNode: gql(shoppingListQuery)));
+    Map shoppingListUpdates = response.data["updateShoppingList"];
+    return shoppingListUpdates;
   }
 }
