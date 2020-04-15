@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
+import 'package:helping_hand_frontend/screens/login.dart';
 import './imageCapture.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -50,8 +51,21 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.green))));
     } else {
       return Scaffold(
-        appBar: AppBar(title: Text("Current Shopping Order")),
+        appBar: AppBar(
+          title: Text("Current Shopping Order"),
+          automaticallyImplyLeading: false,
+        ),
         backgroundColor: Theme.of(context).accentColor,
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Theme.of(context).primaryColor,
+          tooltip: 'Add a new shopping list',
+          child: Text("Logout"),
+          elevation: 2.0,
+          onPressed: () {
+            return Navigator.of(context)
+                .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+          },
+        ),
         body: Container(
           padding: EdgeInsets.all(10.0),
           child: Center(
@@ -161,7 +175,6 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
     final response =
         await client.query(QueryOptions(documentNode: gql(shoppingListQuery)));
     Map shoppingListUpdates = response.data["updateShoppingList"];
-    print(response.data);
     return shoppingListUpdates;
   }
 }
