@@ -114,7 +114,7 @@ class Button extends StatelessWidget {
             textStyle: TextStyle(fontSize: 25.0),
           ),
         ),
-        textColor: Theme.of(context).primaryColor,
+        textColor: Theme.of(context).primaryColorDark,
         color: Colors.white,
         hoverColor: Colors.white60,
         onPressed: () {
