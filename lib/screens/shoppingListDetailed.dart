@@ -3,6 +3,7 @@ import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../transformers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 class shoppingListDetailed extends StatefulWidget {
   GoogleMapController mapController;
@@ -39,6 +40,14 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                RaisedButton(
+                  color: Theme.of(context).primaryColor,
+                  onPressed: null,
+                  child: Text(
+                    "Help ${widget.shoppingListData["helpee"]["name"]}!",
+                    textScaleFactor: 1.2,
+                  ),
+                ),
                 Container(
                   margin: EdgeInsets.only(left: 10.0, right: 10.0),
                   child: Padding(
@@ -62,26 +71,6 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                   padding: EdgeInsets.only(top: 20.0),
                   child: Text(
                       "${widget.shoppingListData["helpee"]["name"]} sent this request on $formattedDate"),
-                ),
-                RaisedButton(
-                  color: Theme.of(context).primaryColor,
-                  onPressed: null,
-                  child: Text(
-                    "Help ${widget.shoppingListData["helpee"]["name"]}!",
-                    textScaleFactor: 1.2,
-                  ),
-                ),
-                RaisedButton(
-                  color: Theme.of(context).primaryColor,
-                  onPressed: () {
-                    return _launchURL(
-                        widget.shoppingListData["helpee"]["locationLatLng"][0],
-                        widget.shoppingListData["helpee"]["locationLatLng"][1]);
-                  },
-                  child: Text(
-                    "Open ${widget.shoppingListData["helpee"]["name"]}'s Location in Google Maps",
-                    textScaleFactor: 1.2,
-                  ),
                 ),
                 Container(
                   height: 300.0,
@@ -107,6 +96,18 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                     ),
                   ),
                 ),
+                RaisedButton(
+                  color: Theme.of(context).primaryColor,
+                  onPressed: () {
+                    return _launchURL(
+                        widget.shoppingListData["helpee"]["locationLatLng"][0],
+                        widget.shoppingListData["helpee"]["locationLatLng"][1]);
+                  },
+                  child: Text(
+                    "Open ${widget.shoppingListData["helpee"]["name"]}'s Location in Google Maps",
+                    textScaleFactor: 1.2,
+                  ),
+                ),
               ],
             ),
           ),
@@ -123,6 +124,48 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
       throw 'Could not launch $url';
     }
   }
+
+//   Future updateShoppingListStatus(shoppingListId, volunteerId) async {
+//     String shoppingListUpdateQuery = '''mutation shoppingListUpdateQuery {
+//   updateShoppingList(listId: "", volunteerId: "", volunteerComplete: true) {
+//     orderStatus
+//   }
+// }
+// ''';
+//     final HttpLink httpLink = HttpLink(
+//       uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
+//     );
+//     GraphQLClient client = GraphQLClient(
+//       cache: InMemoryCache(),
+//       link: httpLink,
+//     );
+//     final response = await client
+//         .query(QueryOptions(documentNode: gql(shoppingListUpdateQuery)));
+//     String result = response.data["shoppingListUpdateQuery"];
+//     print(result);
+//     return result;
+//   }
+
+//   Future updateVolunteersList(shoppingListId, volunteerId) async {
+//     String VolunteerUpdateQuery = '''mutation shoppingListUpdateQuery {
+//   updateShoppingList(listId: "", volunteerId: "", volunteerComplete: true) {
+//     orderStatus
+//   }
+// }
+// ''';
+//     final HttpLink httpLink = HttpLink(
+//       uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
+//     );
+//     GraphQLClient client = GraphQLClient(
+//       cache: InMemoryCache(),
+//       link: httpLink,
+//     );
+//     final response = await client
+//         .query(QueryOptions(documentNode: gql(VolunteerUpdateQuery)));
+//     String result = response.data["shoppingListUpdateQuery"];
+//     print(result);
+//     return result;
+//   }
 }
 
 // final Marker marker = Marker(markerId: )
