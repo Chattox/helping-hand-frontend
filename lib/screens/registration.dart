@@ -17,6 +17,7 @@ class _RegistrationState extends State<Registration> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController password2Controller = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController postcodeController = TextEditingController();
   TextEditingController streetAddressController = TextEditingController();
@@ -125,6 +126,29 @@ class _RegistrationState extends State<Registration> {
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Please enter your password';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 7.0, bottom: 7.0, right: 20.0),
+                  child: TextFormField(
+                    style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Theme.of(context).primaryColorDark),
+                        fontSize: 20.0),
+                    controller: password2Controller,
+                    decoration: InputDecoration(
+                      labelText: 'Re-Type Password',
+                      icon: Icon(Icons.vpn_key,
+                          color: Theme.of(context).primaryColor),
+                    ),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value != passwordController.text) {
+                        return "Passwords don't match";
                       }
                       return null;
                     },
@@ -341,6 +365,7 @@ class _RegistrationState extends State<Registration> {
     nameController.text = "";
     emailController.text = "";
     passwordController.text = "";
+    password2Controller.text = "";
     phoneNumberController.text = "";
     postcodeController.text = "";
     streetAddressController.text = "";
