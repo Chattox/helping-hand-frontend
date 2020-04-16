@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import './screens/home.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import './screens/login.dart';
 import './screens/home.dart';
+import './screens/login.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,7 +53,7 @@ class MyApp extends StatelessWidget {
           // text styling for headlines, titles, bodies of text, and more.
           textTheme: TextTheme(
             headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-            title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+            title: TextStyle(fontSize: 50.0, fontFamily: 'LondrinaShadow'),
             body1: TextStyle(fontSize: 14.0, fontFamily: 'Roboto'),
           ),
         ),

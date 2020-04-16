@@ -11,28 +11,15 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).accentColor,
+      backgroundColor: Theme.of(context).primaryColor,
       body: Container(
         width: 1000.0,
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          image: DecorationImage(
-              repeat: ImageRepeat.noRepeat,
-              colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.3), BlendMode.dstATop),
-              image: AssetImage('./images/grocery-cart-with-item.jpg'),
-              fit: BoxFit.cover),
-        ),
         child: Column(
           children: <Widget>[
             Container(
-              padding: EdgeInsets.only(top: 180.0),
+              padding: EdgeInsets.only(top: 100.0, left: 20.0),
               child: Center(
-                child: Icon(
-                  Icons.shopping_basket,
-                  color: Colors.white,
-                  size: 65.0,
-                ),
+                child: ShoppingBasketLogo(),
               ),
             ),
             Container(
@@ -42,33 +29,39 @@ class MyHomePage extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     "Helping",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.title,
                   ),
                   Text(
                     " Hand",
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25.0,
-                    ),
+                        color: Colors.white,
+                        fontSize: 25.0,
+                        fontFamily: "LondrinaShadow"),
                   ),
                 ],
               ),
             ),
             Container(
-              margin:
-                  const EdgeInsets.only(left: 30.0, right: 30.0, top: 100.0),
+              margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 30.0),
               alignment: Alignment.center,
               child: Column(
                 children: <Widget>[
-                  Button(text: "Login", pageName: "Login"),
-                  Button(
-                      text: "Register as a Volunteer",
-                      pageName: "Registration"),
-                  Button(text: "I'm in need of help", pageName: "Registration"),
+                  ButtonTheme(
+                    minWidth: 400.0,
+                    child: Button(text: "Login", pageName: "Login"),
+                  ),
+                  ButtonTheme(
+                    minWidth: 400.0,
+                    child: Button(
+                        text: "I would like to help.",
+                        pageName: "Registration"),
+                  ),
+                  ButtonTheme(
+                    minWidth: 400.0,
+                    child: Button(
+                        text: "Can you do my shopping?",
+                        pageName: "Registration"),
+                  ),
                 ],
               ),
             )
@@ -82,11 +75,10 @@ class MyHomePage extends StatelessWidget {
 class ShoppingBasketLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    AssetImage shoppingBasketAsset = AssetImage('images/shopping-cart.png');
+    AssetImage shoppingBasketAsset = AssetImage('images/shopping-list.png');
     Image image = Image(
       image: shoppingBasketAsset,
-      width: 250.0,
-      height: 250.0,
+      height: 200.0,
     );
     return Container(child: image);
   }
@@ -101,7 +93,7 @@ class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var button = Container(
-      height: 50.0,
+      height: 70.0,
       margin: EdgeInsets.only(top: 7.5, bottom: 7.5),
       padding: EdgeInsets.all(3.0),
       child: FlatButton(

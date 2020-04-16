@@ -74,6 +74,10 @@ flutter:
           weight: 500
         - asset: fonts/Roboto-Medium.ttf
           weight: 700
+    - family: LondrinaShadow
+      fonts:
+        - asset: fonts/LondrinaShadow-Regular.ttf
+          weight: 400
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
