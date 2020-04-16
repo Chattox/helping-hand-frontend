@@ -89,6 +89,7 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                     padding: EdgeInsets.all(20.0),
                     child: GoogleMap(
                       mapType: MapType.normal,
+                      myLocationEnabled: true,
                       onMapCreated: (GoogleMapController controller) {
                         widget.mapController = controller;
                       },
