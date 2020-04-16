@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
     return GraphQLProvider(
       client: client,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         routes: {
           Routes.loginPage: (BuildContext context) => Login(screen: 'helpee'),
         },

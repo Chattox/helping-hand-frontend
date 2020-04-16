@@ -2,6 +2,7 @@ import 'dart:core';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import './dashboardHelpee.dart';
 import './dashboardVolunteer.dart';
 
@@ -22,84 +23,138 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
-      appBar: AppBar(title: Text("Login")),
-      backgroundColor: Theme.of(context).accentColor,
-      body: Container(
-        padding: EdgeInsets.all(10.0),
-        child: Column(
-          children: <Widget>[
-            if (widget.screen == "registration")
-              Padding(
-                  padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                  child: Text('Successful registration. Please log in.',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 18))),
-            Padding(
-              padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-              child: TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  labelText: "Email address:",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0)),
+        appBar: AppBar(title: Text("")),
+        backgroundColor: Theme.of(context).accentColor,
+        body: Container(
+          height: 1000.0,
+          padding: EdgeInsets.all(10.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                if (widget.screen == "registration")
+                  Padding(
+                      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      child: Text('Successful registration. Please log in.',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18))),
+                Padding(
+                  padding:
+                      EdgeInsets.only(top: 10.0, bottom: 10.0, right: 10.0),
+                  child: TextField(
+                    style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Theme.of(context).primaryColorDark),
+                        fontSize: 20.0),
+                    cursorColor: Colors.green,
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.alternate_email,
+                          color: Theme.of(context).primaryColor),
+                      labelText: "Email address:",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).primaryColorLight)),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-              child: TextField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: "Password:",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0)),
+                Padding(
+                  padding:
+                      EdgeInsets.only(top: 10.0, bottom: 10.0, right: 10.0),
+                  child: TextField(
+                    style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Theme.of(context).primaryColorDark),
+                        fontSize: 20.0),
+                    cursorColor: Colors.green,
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.vpn_key,
+                          color: Theme.of(context).primaryColor),
+                      labelText: "Password:",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16.0)),
+                    ),
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: ButtonTheme(
+                    height: 60.0,
+                    minWidth: 400.0,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.0),
+                        side: BorderSide(
+                            color: Theme.of(context).primaryColor, width: 3.0),
+                      ),
+                      color: Theme.of(context).primaryColor,
+                      onPressed: () {
+                        setState(() {
+                          enteredEmailAddress = emailController.text;
+                          enteredPassword = passwordController.text;
+                        });
+                        queryBuilder(enteredEmailAddress, enteredPassword)
+                            .then((user) {
+                          String userType = user["userType"];
+                          setState(() {
+                            returnedUserType = userType;
+                          });
+                          return user;
+                        }).then((data) {
+                          if (returnedUserType == "volunteer") {
+                            return Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      VolunteerDashboard(userData: data)),
+                            );
+                          }
+                          if (returnedUserType == "helpee") {
+                            return Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      HelpeeDashboard(userData: data)),
+                            );
+                          }
+                          return null;
+                        });
+                      },
+                      child: Text(
+                        "Login",
+                        style: GoogleFonts.pangolin(
+                          textStyle:
+                              TextStyle(fontSize: 25.0, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
             ),
-            RaisedButton(
-              color: Theme.of(context).primaryColor,
-              onPressed: () {
-                setState(() {
-                  enteredEmailAddress = emailController.text;
-                  enteredPassword = passwordController.text;
-                });
-                queryBuilder(enteredEmailAddress, enteredPassword).then((user) {
-                  String userType = user["userType"];
-                  setState(() {
-                    returnedUserType = userType;
-                  });
-                  return user;
-                }).then((data) {
-                  if (returnedUserType == "volunteer") {
-                    return Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              VolunteerDashboard(userData: data)),
-                    );
-                  }
-                  if (returnedUserType == "helpee") {
-                    return Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              HelpeeDashboard(userData: data)),
-                    );
-                  }
-                  return null;
-                });
-              },
-              child: Text(
-                "Login",
-                textScaleFactor: 1.2,
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
-    );
+        bottomNavigationBar: BottomAppBar(
+          color: Theme.of(context).accentColor,
+          elevation: 0.0,
+          child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Image.asset(
+                "images/groceries/groceries.png",
+                width: 80.0,
+              ),
+            ),
+          ]),
+        ));
   }
 
   Future queryBuilder(email, password) async {
