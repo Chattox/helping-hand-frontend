@@ -2,6 +2,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import './login.dart';
 import './registration.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MyHomePage extends StatelessWidget {
   final String title;
@@ -17,32 +18,39 @@ class MyHomePage extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Container(
-              padding: EdgeInsets.only(top: 100.0, left: 20.0),
+              padding: EdgeInsets.only(top: 60.0, left: 20.0),
               child: Center(
                 child: ShoppingBasketLogo(),
               ),
             ),
             Container(
-              padding: EdgeInsets.only(top: 20.0),
+              padding: EdgeInsets.only(top: 10.0),
               child: new Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
                     "Helping",
-                    style: Theme.of(context).textTheme.title,
+                    style: GoogleFonts.londrinaSolid(
+                      textStyle: TextStyle(
+                          color: Colors.white,
+                          letterSpacing: .5,
+                          fontSize: 60.0),
+                    ),
                   ),
                   Text(
-                    " Hand",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25.0,
-                        fontFamily: "LondrinaShadow"),
+                    "Hand",
+                    style: GoogleFonts.londrinaShadow(
+                      textStyle: TextStyle(
+                          color: Colors.white,
+                          letterSpacing: .5,
+                          fontSize: 60.0),
+                    ),
                   ),
                 ],
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 30.0),
+              margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0),
               alignment: Alignment.center,
               child: Column(
                 children: <Widget>[
@@ -53,14 +61,13 @@ class MyHomePage extends StatelessWidget {
                   ButtonTheme(
                     minWidth: 400.0,
                     child: Button(
-                        text: "I would like to help.",
+                        text: "Help me with my shopping",
                         pageName: "Registration"),
                   ),
                   ButtonTheme(
                     minWidth: 400.0,
                     child: Button(
-                        text: "Can you do my shopping?",
-                        pageName: "Registration"),
+                        text: "I'm here to help", pageName: "Registration"),
                   ),
                 ],
               ),
@@ -93,8 +100,8 @@ class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var button = Container(
-      height: 70.0,
-      margin: EdgeInsets.only(top: 7.5, bottom: 7.5),
+      height: 80.0,
+      margin: EdgeInsets.only(top: 5, bottom: 5),
       padding: EdgeInsets.all(3.0),
       child: FlatButton(
         shape: RoundedRectangleBorder(
@@ -103,7 +110,9 @@ class Button extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: TextStyle(fontSize: 18.0),
+          style: GoogleFonts.pangolin(
+            textStyle: TextStyle(fontSize: 25.0),
+          ),
         ),
         textColor: Theme.of(context).primaryColor,
         color: Colors.white,
