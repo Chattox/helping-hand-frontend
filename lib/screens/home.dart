@@ -114,7 +114,7 @@ class Button extends StatelessWidget {
             textStyle: TextStyle(fontSize: 25.0),
           ),
         ),
-        textColor: Theme.of(context).primaryColor,
+        textColor: Theme.of(context).primaryColorDark,
         color: Colors.white,
         hoverColor: Colors.white60,
         onPressed: () {
@@ -127,7 +127,7 @@ class Button extends StatelessWidget {
                 ),
               );
               break;
-            case 'Register as a Volunteer':
+            case "I'm here to help":
               return Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -135,7 +135,7 @@ class Button extends StatelessWidget {
                 ),
               );
               break;
-            case "I'm in need of help":
+            case "Help me with my shopping":
               return Navigator.push(
                 context,
                 MaterialPageRoute(
