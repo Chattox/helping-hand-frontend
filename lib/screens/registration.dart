@@ -2,6 +2,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import './login.dart';
 
 class Registration extends StatefulWidget {
@@ -34,7 +35,17 @@ class _RegistrationState extends State<Registration> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Registration")),
+      appBar: AppBar(
+        title: Text(
+          "Registration",
+          style: GoogleFonts.londrinaShadow(
+              textStyle: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white,
+                  letterSpacing: 1.5),
+              fontSize: 40.0),
+        ),
+      ),
       backgroundColor: Theme.of(context).accentColor,
       body: Container(
         padding: EdgeInsets.all(10.0),
@@ -44,11 +55,25 @@ class _RegistrationState extends State<Registration> {
             child: (Column(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(top: 10.0, bottom: 7.0, right: 15.0),
+                  padding: EdgeInsets.only(top: 10.0),
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Image.asset(
+                        "images/groceries/fruit.png",
+                        width: 50.0,
+                      )),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 7.0, right: 15.0),
                   child: TextFormField(
+                    style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Theme.of(context).primaryColorDark),
+                        fontSize: 20.0),
                     controller: nameController,
                     decoration: InputDecoration(
-                      labelText: 'First Name',
+                      labelText: 'Name',
                       icon: Icon(Icons.person,
                           color: Theme.of(context).primaryColor),
                     ),
@@ -63,6 +88,11 @@ class _RegistrationState extends State<Registration> {
                 Padding(
                   padding: EdgeInsets.only(top: 7.0, bottom: 7.0, right: 20.0),
                   child: TextFormField(
+                    style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Theme.of(context).primaryColorDark),
+                        fontSize: 20.0),
                     controller: emailController,
                     decoration: InputDecoration(
                       labelText: 'Email Address',
@@ -80,6 +110,11 @@ class _RegistrationState extends State<Registration> {
                 Padding(
                   padding: EdgeInsets.only(top: 7.0, bottom: 7.0, right: 20.0),
                   child: TextFormField(
+                    style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Theme.of(context).primaryColorDark),
+                        fontSize: 20.0),
                     controller: passwordController,
                     decoration: InputDecoration(
                       labelText: 'Password',
@@ -98,6 +133,11 @@ class _RegistrationState extends State<Registration> {
                 Padding(
                   padding: EdgeInsets.only(top: 7.0, bottom: 7.0, right: 20.0),
                   child: TextFormField(
+                    style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Theme.of(context).primaryColorDark),
+                        fontSize: 20.0),
                     controller: phoneNumberController,
                     keyboardType: TextInputType.number,
                     inputFormatters: [
@@ -119,6 +159,11 @@ class _RegistrationState extends State<Registration> {
                 Padding(
                   padding: EdgeInsets.only(top: 7.0, bottom: 7.0, right: 20.0),
                   child: TextFormField(
+                    style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Theme.of(context).primaryColorDark),
+                        fontSize: 20.0),
                     controller: postcodeController,
                     decoration: InputDecoration(
                       labelText: 'Postcode',
@@ -138,6 +183,11 @@ class _RegistrationState extends State<Registration> {
                     padding:
                         EdgeInsets.only(top: 7.0, bottom: 7.0, right: 20.0),
                     child: TextFormField(
+                      style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).primaryColorDark),
+                          fontSize: 20.0),
                       controller: streetAddressController,
                       decoration: InputDecoration(
                         labelText: 'Street Address',
@@ -157,6 +207,11 @@ class _RegistrationState extends State<Registration> {
                     padding:
                         EdgeInsets.only(top: 7.0, bottom: 7.0, right: 20.0),
                     child: TextFormField(
+                      style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).primaryColorDark),
+                          fontSize: 20.0),
                       controller: cityController,
                       decoration: InputDecoration(
                         labelText: 'City',
@@ -176,7 +231,14 @@ class _RegistrationState extends State<Registration> {
                     padding: EdgeInsets.only(top: 15.0),
                     child: Row(
                       children: <Widget>[
-                        Text("0"),
+                        Text(
+                          "0",
+                          style: GoogleFonts.lato(
+                              textStyle: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Theme.of(context).primaryColor),
+                              fontSize: 30.0),
+                        ),
                         Expanded(
                           child: Slider(
                             value: enteredDistanceToTravel,
@@ -184,7 +246,7 @@ class _RegistrationState extends State<Registration> {
                             max: 10,
                             divisions: 20,
                             label: "$enteredDistanceToTravel",
-                            activeColor: Theme.of(context).primaryColor,
+                            activeColor: Theme.of(context).primaryColorDark,
                             onChanged: (value) {
                               setState(() {
                                 enteredDistanceToTravel = value;
@@ -192,7 +254,14 @@ class _RegistrationState extends State<Registration> {
                             },
                           ),
                         ),
-                        Text("10"),
+                        Text(
+                          "10",
+                          style: GoogleFonts.lato(
+                              textStyle: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Theme.of(context).primaryColor),
+                              fontSize: 30.0),
+                        ),
                       ],
                     ),
                   ),
@@ -200,44 +269,65 @@ class _RegistrationState extends State<Registration> {
                   Padding(
                     padding: EdgeInsets.only(bottom: 15.0),
                     child: Text(
-                        "Distance willing to travel: $enteredDistanceToTravel miles"),
+                      "Distance willing to travel: $enteredDistanceToTravel miles",
+                      style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).primaryColorDark),
+                          fontSize: 20.0),
+                    ),
                   ),
-                RaisedButton(
-                  color: Theme.of(context).primaryColor,
-                  child: Text(
-                    "Register",
-                    textScaleFactor: 1.2,
-                  ),
-                  onPressed: () {
-                    if (_formKey.currentState.validate()) {
-                      setState(() {
-                        enteredName = nameController.text;
-                        enteredEmail = emailController.text;
-                        enteredPassword = passwordController.text;
-                        enteredPhoneNumber =
-                            int.parse(phoneNumberController.text);
-                        enteredPostcode = postcodeController.text;
-                        enteredStreetAddress = streetAddressController.text;
-                        enteredCity = cityController.text;
-                      });
-                      queryBuilder(
-                              widget.screen,
-                              enteredName,
-                              enteredEmail,
-                              enteredPassword,
-                              enteredPhoneNumber,
-                              enteredPostcode,
-                              enteredStreetAddress,
-                              enteredCity,
-                              enteredDistanceToTravel)
-                          .then((data) {
-                        if (data["createUser"]["name"] != null) {
-                          navigateToPage();
-                          reset();
+                Padding(
+                  padding: EdgeInsets.only(top: 15.0),
+                  child: ButtonTheme(
+                    height: 60.0,
+                    minWidth: 400.0,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.0),
+                        side: BorderSide(
+                            color: Theme.of(context).primaryColor, width: 3.0),
+                      ),
+                      color: Theme.of(context).primaryColor,
+                      child: Text(
+                        "Register",
+                        style: GoogleFonts.pangolin(
+                          textStyle:
+                              TextStyle(fontSize: 25.0, color: Colors.white),
+                        ),
+                      ),
+                      onPressed: () {
+                        if (_formKey.currentState.validate()) {
+                          setState(() {
+                            enteredName = nameController.text;
+                            enteredEmail = emailController.text;
+                            enteredPassword = passwordController.text;
+                            enteredPhoneNumber =
+                                int.parse(phoneNumberController.text);
+                            enteredPostcode = postcodeController.text;
+                            enteredStreetAddress = streetAddressController.text;
+                            enteredCity = cityController.text;
+                          });
+                          queryBuilder(
+                                  widget.screen,
+                                  enteredName,
+                                  enteredEmail,
+                                  enteredPassword,
+                                  enteredPhoneNumber,
+                                  enteredPostcode,
+                                  enteredStreetAddress,
+                                  enteredCity,
+                                  enteredDistanceToTravel)
+                              .then((data) {
+                            if (data["createUser"]["name"] != null) {
+                              navigateToPage();
+                              reset();
+                            }
+                          });
                         }
-                      });
-                    }
-                  },
+                      },
+                    ),
+                  ),
                 )
               ],
             )),

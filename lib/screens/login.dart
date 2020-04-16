@@ -26,7 +26,16 @@ class _LoginState extends State<Login> {
     var screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-        appBar: AppBar(title: Text("")),
+        appBar: AppBar(
+            title: Text(
+          "Welcome Back",
+          style: GoogleFonts.londrinaShadow(
+              textStyle: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white,
+                  letterSpacing: 1.5),
+              fontSize: 40.0),
+        )),
         backgroundColor: Theme.of(context).accentColor,
         body: Container(
           height: 1000.0,
