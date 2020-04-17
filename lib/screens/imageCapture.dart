@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import './dashboardHelpee.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ImageCapture extends StatefulWidget {
   final String userId;
@@ -52,73 +53,151 @@ class _ImageCaptureState extends State<ImageCapture> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add Your Shopping List"),
+        title: Text("Add A List",
+            style: GoogleFonts.londrinaShadow(
+                textStyle: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white,
+                    letterSpacing: 1.5),
+                fontSize: 40.0)),
         automaticallyImplyLeading: false,
       ),
       backgroundColor: Theme.of(context).accentColor,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            if (_imageFile == null) ...[
-              Container(
-                alignment: Alignment(0.0, 0.0),
-                margin: new EdgeInsets.all(20.0),
-                width: 320.0,
-                color: Colors.green[200],
-                child: FlatButton(
-                  child: Column(
-                    children: <Widget>[
-                      Icon(Icons.photo_camera, size: 80.0),
-                      Text(
-                        " Take A Photo Of Your Shopping List",
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                    ],
-                  ),
-                  onPressed: () => _pickImage(ImageSource.camera),
+      bottomNavigationBar: BottomAppBar(
+        color: Theme.of(context).accentColor,
+        elevation: 0.0,
+        child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+          Padding(
+            padding: EdgeInsets.only(bottom: 20.0, left: 20.0),
+            child: Image.asset(
+              "images/groceries/shopping-list-basket.png",
+              width: 60.0,
+            ),
+          ),
+        ]),
+      ),
+      body: Container(
+        padding: EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              if (_imageFile == null) ...[
+                Padding(
                   padding: EdgeInsets.all(10.0),
-                ),
-              ),
-              Container(
-                  width: 320.0,
-                  color: Theme.of(context).primaryColor,
-                  child: FlatButton(
-                    child: Column(
-                      children: <Widget>[
-                        Icon(Icons.photo_library, size: 80.0),
-                        Text(" Choose From Your Photo Gallery",
-                            style: TextStyle(fontSize: 16.0))
-                      ],
-                    ),
-                    onPressed: () => _pickImage(ImageSource.gallery),
-                    padding: EdgeInsets.all(10.0),
-                  )),
-            ],
-            if (_imageFile != null) ...[
-              Image.file(
-                _imageFile,
-                alignment: Alignment.center,
-                height: 400.0,
-                fit: BoxFit.scaleDown,
-              ),
-              Column(
-                children: <Widget>[
-                  Container(
-                    width: 280.0,
-                    child: FlatButton.icon(
+                  child: ButtonTheme(
+                    height: 60.0,
+                    minWidth: 400.0,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.0),
+                        side: BorderSide(
+                            color: Theme.of(context).primaryColor, width: 3.0),
+                      ),
                       color: Theme.of(context).primaryColor,
-                      label: Text("Crop"),
-                      icon: Icon(Icons.crop),
-                      onPressed: _cropImage,
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(top: 20.0, bottom: 5.0),
+                          ),
+                          Icon(Icons.photo_camera,
+                              size: 80.0, color: Colors.white),
+                          Padding(
+                            padding: EdgeInsets.only(top: 5.0, bottom: 20.0),
+                            child: Text(
+                              "Take a photo of your shopping list",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.pangolin(
+                                textStyle: TextStyle(
+                                    fontSize: 28.0, color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      onPressed: () => _pickImage(ImageSource.camera),
                     ),
-                  )
-                ],
-              ),
-              Uploader(file: _imageFile, userId: widget.userId)
-            ]
-          ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: ButtonTheme(
+                    height: 60.0,
+                    minWidth: 400.0,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.0),
+                        side: BorderSide(
+                            color: Theme.of(context).primaryColor, width: 3.0),
+                      ),
+                      color: Theme.of(context).primaryColor,
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(top: 20.0, bottom: 5.0),
+                            child: Icon(Icons.photo_library,
+                                size: 80.0, color: Colors.white),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 5.0, bottom: 20.0),
+                            child: Text(
+                              "Choose from your \nphoto gallery",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.pangolin(
+                                textStyle: TextStyle(
+                                    fontSize: 28.0, color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      onPressed: () => _pickImage(ImageSource.gallery),
+                    ),
+                  ),
+                ),
+              ],
+              if (_imageFile != null) ...[
+                Image.file(
+                  _imageFile,
+                  alignment: Alignment.center,
+                  height: 250.0,
+                  fit: BoxFit.scaleDown,
+                ),
+                Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(
+                          top: 7.0, right: 10.0, left: 10.0, bottom: 5.0),
+                      child: ButtonTheme(
+                        height: 40.0,
+                        minWidth: 400.0,
+                        child: RaisedButton.icon(
+                          color: Theme.of(context).primaryColor,
+                          icon: Icon(Icons.crop, color: Colors.white),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16.0),
+                            side: BorderSide(
+                                color: Theme.of(context).primaryColor,
+                                width: 3.0),
+                          ),
+                          label: Text(
+                            "Crop",
+                            style: GoogleFonts.pangolin(
+                              textStyle: TextStyle(
+                                  fontSize: 20.0, color: Colors.white),
+                            ),
+                          ),
+                          onPressed: _cropImage,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Uploader(file: _imageFile, userId: widget.userId)
+              ]
+            ],
+          ),
         ),
       ),
     );
@@ -259,26 +338,55 @@ class _UploaderState extends State<Uploader> {
       return Container(
         child: Column(
           children: <Widget>[
-            Container(
-              width: 280.0,
-              child: FlatButton.icon(
-                color: Theme.of(context).primaryColor,
-                label: Text('Upload image'),
-                icon: Icon(Icons.cloud_upload),
-                onPressed: _startUpload,
+            Padding(
+              padding: EdgeInsets.only(right: 10.0, left: 10.0, bottom: 5.0),
+              child: ButtonTheme(
+                height: 40.0,
+                minWidth: 400.0,
+                child: RaisedButton.icon(
+                  color: Theme.of(context).primaryColor,
+                  icon: Icon(Icons.cloud_upload, color: Colors.white),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.0),
+                    side: BorderSide(
+                        color: Theme.of(context).primaryColor, width: 3.0),
+                  ),
+                  label: Text(
+                    "Add your image",
+                    style: GoogleFonts.pangolin(
+                      textStyle: TextStyle(fontSize: 20.0, color: Colors.white),
+                    ),
+                  ),
+                  onPressed: _startUpload,
+                ),
               ),
             ),
-            Container(
-              width: 280.0,
-              child: FlatButton.icon(
-                color: Theme.of(context).primaryColor,
-                label: Text("Back"),
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+            Padding(
+              padding: EdgeInsets.only(
+                  top: 7.0, right: 10.0, left: 10.0, bottom: 5.0),
+              child: ButtonTheme(
+                height: 40.0,
+                minWidth: 400.0,
+                child: RaisedButton.icon(
+                  color: Theme.of(context).primaryColor,
+                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.0),
+                    side: BorderSide(
+                        color: Theme.of(context).primaryColor, width: 3.0),
+                  ),
+                  label: Text(
+                    "Back to Dashboard",
+                    style: GoogleFonts.pangolin(
+                      textStyle: TextStyle(fontSize: 20.0, color: Colors.white),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
               ),
-            )
+            ),
           ],
         ),
       );
