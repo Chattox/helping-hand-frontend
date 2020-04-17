@@ -68,99 +68,121 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
           automaticallyImplyLeading: false,
         ),
         backgroundColor: Theme.of(context).accentColor,
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor,
-          tooltip: 'Add a new shopping list',
-          child: Text("Logout"),
-          elevation: 2.0,
-          onPressed: () {
-            return Navigator.of(context)
-                .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-          },
-        ),
         body: Container(
           padding: EdgeInsets.all(5.0),
           child: Center(
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
-                  child: FadeInImage.memoryNetwork(
-                      placeholder: kTransparentImage,
-                      image: '${shoppingListData["listImage"]}',
-                      imageSemanticLabel: 'My Shopping List',
-                      height: 275.0),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 7.5),
-                  child: Text(
-                      "Order status is: ${shoppingListData["orderStatus"]}",
-                      style: Theme.of(context).textTheme.body1),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 7.5),
-                  child: Text("Date: $parsedDate",
-                      style: Theme.of(context).textTheme.body1),
-                ),
-                if (shoppingListData["volunteer"] != null)
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Image.asset('images/groceries/bread.png', width: 60.0),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
+                    child: FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: '${shoppingListData["listImage"]}',
+                        imageSemanticLabel: 'My Shopping List',
+                        height: 275.0),
+                  ),
                   Padding(
                     padding: EdgeInsets.only(bottom: 7.5),
                     child: Text(
-                        "${shoppingListData["volunteer"]["name"]} is assigned to your order. \n They can get in touch with you via your phone number.",
-                        textAlign: TextAlign.center,
+                        "Order status is: ${shoppingListData["orderStatus"]}",
                         style: Theme.of(context).textTheme.body1),
                   ),
-                if (shoppingListData["volunteer"] == null)
                   Padding(
                     padding: EdgeInsets.only(bottom: 7.5),
-                    child: Text(
-                        "Volunteer is not yet assigned to your order. \nPlease check back later",
-                        textAlign: TextAlign.center,
+                    child: Text("Date: $parsedDate",
                         style: Theme.of(context).textTheme.body1),
                   ),
-                if (shoppingListData["volunteer"] != null)
-                  Text(
-                      "Contact ${shoppingListData["volunteer"]["name"]}: ${shoppingListData["volunteer"]["phoneNumber"]}",
-                      style: Theme.of(context).textTheme.body1),
-                if (orderReceived == false)
-                  Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: ButtonTheme(
-                      height: 60.0,
-                      minWidth: 400.0,
-                      child: RaisedButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                          side: BorderSide(
-                              color: Theme.of(context).primaryColor,
-                              width: 3.0),
-                        ),
-                        color: Theme.of(context).primaryColor,
-                        onPressed: () {
-                          updateShoppingListStatus(
-                                  widget.userData["shoppingListId"][0]["_id"])
-                              .then((data) {
-                            setState(() {
-                              orderReceived = true;
+                  if (shoppingListData["volunteer"] != null)
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 7.5),
+                      child: Text(
+                          "${shoppingListData["volunteer"]["name"]} is assigned to your order. \n They can get in touch with you via your phone number.",
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.body1),
+                    ),
+                  if (shoppingListData["volunteer"] == null)
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 7.5),
+                      child: Text(
+                          "Volunteer is not yet assigned to your order. \nPlease check back later",
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.body1),
+                    ),
+                  if (shoppingListData["volunteer"] != null)
+                    Text(
+                        "Contact ${shoppingListData["volunteer"]["name"]}: ${shoppingListData["volunteer"]["phoneNumber"]}",
+                        style: Theme.of(context).textTheme.body1),
+                  if (orderReceived == false)
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: ButtonTheme(
+                        height: 60.0,
+                        minWidth: 400.0,
+                        child: RaisedButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16.0),
+                            side: BorderSide(
+                                color: Theme.of(context).primaryColor,
+                                width: 3.0),
+                          ),
+                          color: Theme.of(context).primaryColor,
+                          onPressed: () {
+                            updateShoppingListStatus(
+                                    widget.userData["shoppingListId"][0]["_id"])
+                                .then((data) {
+                              setState(() {
+                                orderReceived = true;
+                              });
                             });
-                          });
-                        },
-                        child: Text(
-                          "Order Received",
-                          style: GoogleFonts.pangolin(
-                            textStyle:
-                                TextStyle(fontSize: 25.0, color: Colors.white),
+                          },
+                          child: Text(
+                            "I've received my order!",
+                            style: GoogleFonts.pangolin(
+                              textStyle: TextStyle(
+                                  fontSize: 25.0, color: Colors.white),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                if (orderReceived == true)
-                  Container(
+                  if (orderReceived == true)
+                    Container(
                       margin: EdgeInsets.only(top: 10.0),
                       child: Text("You have marked your order as complete.",
-                          style: Theme.of(context).textTheme.body1))
-              ],
+                          style: Theme.of(context).textTheme.body1),
+                    ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        right: 10.0, left: 10.0, bottom: 10.0, top: 5.0),
+                    child: ButtonTheme(
+                      height: 60.0,
+                      minWidth: 400.0,
+                      child: RaisedButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16.0),
+                            side: BorderSide(
+                                color: Theme.of(context).primaryColor,
+                                width: 3.0),
+                          ),
+                          color: Theme.of(context).primaryColor,
+                          child: Text(
+                            "Logout",
+                            style: GoogleFonts.pangolin(
+                              textStyle: TextStyle(
+                                  fontSize: 25.0, color: Colors.white),
+                            ),
+                          ),
+                          onPressed: () {
+                            return Navigator.of(context)
+                                .pushNamedAndRemoveUntil(
+                                    '/', (Route<dynamic> route) => false);
+                          }),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
