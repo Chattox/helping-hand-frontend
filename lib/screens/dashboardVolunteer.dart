@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import './shoppingListDetailed.dart';
 import '../transformers.dart';
 
@@ -24,11 +25,15 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
   void initState() {
     super.initState();
     queryBuilder().then((shoppingLists) {
+      // List<Map> sortedShoppingLists =
+      //     shoppingLists.sort((m1, m2) => (m1.distance).compareTo(m2.distance));
+      // setShoppingLists(sortedShoppingLists);
       setShoppingLists(shoppingLists);
     });
   }
 
   Widget build(BuildContext context) {
+    print("sorted>>>> $shoppingListsData");
     if (shoppingListsData == null) {
       return Center(
           child: Container(
@@ -36,13 +41,26 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.green))));
     } else {
       return Scaffold(
-        appBar: AppBar(title: Text("Your Neighbours Needing Help")),
+        appBar: AppBar(
+            title: Text("The Ones To Help",
+                style: GoogleFonts.londrinaShadow(
+                    textStyle: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                        letterSpacing: 1.5),
+                    fontSize: 40.0))),
         backgroundColor: Theme.of(context).accentColor,
         body: Column(
           children: [
             Padding(
               padding: EdgeInsets.all(16.0),
-              child: Text("Shopping Lists Available For Pickup In You Area:"),
+              child: Text(
+                "See below your neighbours who would like some help with their shopping. Select one to see more details.",
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(
+                      fontSize: 20, color: Theme.of(context).primaryColorDark),
+                ),
+              ),
             ),
             Expanded(
               child: ListView.builder(
@@ -58,9 +76,16 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                                   shoppingListsData[index]["listImage"]),
                             )
                           : Icon(Icons.format_list_bulleted,
-                              color: Theme.of(context).primaryColor,
+                              color: Theme.of(context).primaryColorDark,
                               size: 40.0),
-                      title: Text(shoppingListsData[index]["helpee"]["name"]),
+                      title: Text(
+                          "${shoppingListsData[index]["helpee"]["name"]} (${shoppingListsData[index]["distance"]} mi)",
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor),
+                          )),
                       subtitle: Text(formattedDate),
                       trailing: Icon(Icons.arrow_forward_ios,
                           color: Theme.of(context).primaryColor),
@@ -102,6 +127,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
     listImage   
     createdAt
     updatedAt
+    distance
   }
 }''';
     final HttpLink httpLink = HttpLink(

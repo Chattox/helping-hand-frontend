@@ -46,10 +46,17 @@ class _LoginState extends State<Login> {
               children: <Widget>[
                 if (widget.screen == "registration")
                   Padding(
-                      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      child: Text('Successful registration. Please log in.',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18))),
+                    padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    child: Text(
+                      'Thank you for registering. Please log in.',
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Theme.of(context).primaryColorDark),
+                      ),
+                    ),
+                  ),
                 Padding(
                   padding:
                       EdgeInsets.only(top: 10.0, bottom: 10.0, right: 10.0),
