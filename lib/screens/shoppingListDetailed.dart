@@ -63,15 +63,16 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
       var formattedDate = formatDate(this.singleShoppingListData["createdAt"]);
       return Scaffold(
         appBar: AppBar(
+            automaticallyImplyLeading: false,
             title: Text(
-          "${this.singleShoppingListData["helpee"]["name"]}",
-          style: GoogleFonts.londrinaShadow(
-              textStyle: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white,
-                  letterSpacing: 1.5),
-              fontSize: 40.0),
-        )),
+              "${this.singleShoppingListData["helpee"]["name"]}",
+              style: GoogleFonts.londrinaShadow(
+                  textStyle: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
+                      letterSpacing: 1.5),
+                  fontSize: 40.0),
+            )),
         backgroundColor: Theme.of(context).accentColor,
         body: Container(
           child: Center(
@@ -79,51 +80,68 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
               child: Column(
                 children: [
                   Padding(
-                    padding:
-                        EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
-                    child: ButtonTheme(
-                      height: 60.0,
-                      minWidth: 400.0,
-                      child: RaisedButton(
-                        color: Theme.of(context).primaryColor,
-                        onPressed: () {
-                          pickUpShoppingList(
-                              widget.shoppingListId, widget.volunteerId);
-                        },
-                        child: Text(
-                          "Help ${this.singleShoppingListData["helpee"]["name"]}!",
-                          style: GoogleFonts.pangolin(
-                            textStyle:
-                                TextStyle(fontSize: 25.0, color: Colors.white),
+                    padding: EdgeInsets.all(10.0),
+                    child: (widget.screen == "dashboard")
+                        ? Text(
+                            "${this.singleShoppingListData["helpee"]["name"]} needs help with their below shopping list which they sent in on $formattedDate. Can you help them?",
+                            textAlign: TextAlign.justify,
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(
+                                  fontSize: 18,
+                                  color: Theme.of(context).primaryColorDark),
+                            ),
+                          )
+                        : Text(
+                            "You are currently helping ${this.singleShoppingListData["helpee"]["name"]} with their below shopping list.",
+                            textAlign: TextAlign.justify,
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(
+                                  fontSize: 18,
+                                  color: Theme.of(context).primaryColorDark),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10.0),
-                    child: Text("Posted on $formattedDate.",
-                        style: GoogleFonts.lato(
-                          textStyle: TextStyle(
-                              fontSize: 18,
-                              color: Theme.of(context).primaryColorDark),
-                        )),
+                  Center(
+                    child: (widget.screen == "dashboard")
+                        ? Padding(
+                            padding: EdgeInsets.only(
+                                left: 10.0, right: 10.0, bottom: 10.0),
+                            child: ButtonTheme(
+                              height: 60.0,
+                              minWidth: 400.0,
+                              child: RaisedButton(
+                                color: Theme.of(context).primaryColor,
+                                onPressed: () {
+                                  pickUpShoppingList(widget.shoppingListId,
+                                      widget.volunteerId);
+                                },
+                                child: Text(
+                                  // "Help ${this.singleShoppingListData["helpee"]["name"]}!",
+                                  "I can help!",
+                                  style: GoogleFonts.pangolin(
+                                    textStyle: TextStyle(
+                                        fontSize: 25.0, color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : null,
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 10.0, right: 10.0),
                     child: Padding(
-                      padding: EdgeInsets.only(top: 5.0, bottom: 20.0),
+                      padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
                       child: Container(
                         decoration: BoxDecoration(
                             border: Border.all(
-                          color: Theme.of(context).primaryColor,
-                          width: 3,
+                          color: Colors.white,
+                          width: 5,
                         )),
                         child: FadeInImage.memoryNetwork(
                           placeholder: kTransparentImage,
                           image: '${this.singleShoppingListData["listImage"]}',
                           imageSemanticLabel: 'My Shopping List',
-                          height: 325.0,
                         ),
                       ),
                     ),
@@ -138,19 +156,25 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                   //       )),
                   // ),
                   Padding(
-                    padding: EdgeInsets.only(top: 10.0),
+                    padding: EdgeInsets.all(10.0),
                     child: Text(
                         "See below ${this.singleShoppingListData["helpee"]["name"]}'s approximate location.",
+                        textAlign: TextAlign.justify,
                         style: GoogleFonts.lato(
                           textStyle: TextStyle(
                               fontSize: 18,
                               color: Theme.of(context).primaryColorDark),
                         )),
                   ),
-                  Container(
-                    height: 300.0,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                        color: Colors.white,
+                        width: 5,
+                      )),
+                      height: 300.0,
                       child: GoogleMap(
                         mapType: MapType.normal,
                         myLocationEnabled: true,
@@ -196,12 +220,106 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                       ),
                     ),
                   ),
+                  Center(
+                      child: (widget.screen == "login")
+                          ? Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Text(
+                                  "Ready to deliver? Please take the bags to ${this.singleShoppingListData["helpee"]["name"]}'s exact address and call them on the below number to arrange safe exchange.",
+                                  textAlign: TextAlign.justify,
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(
+                                        fontSize: 18,
+                                        color:
+                                            Theme.of(context).primaryColorDark),
+                                  )),
+                            )
+                          : null),
+                  Center(
+                      child: (widget.screen == "login")
+                          ? Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Text(
+                                  "${this.singleShoppingListData["helpee"]["streetAddress"]}\n${this.singleShoppingListData["helpee"]["city"]}\n${this.singleShoppingListData["helpee"]["postcode"]}\n\nPhone: ${this.singleShoppingListData["helpee"]["phoneNumber"]}",
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(
+                                        fontSize: 24,
+                                        color:
+                                            Theme.of(context).primaryColorDark),
+                                  )),
+                            )
+                          : null),
+                  Center(
+                    child: (widget.screen == "login")
+                        ? Padding(
+                            padding: EdgeInsets.only(
+                                top: 20.0,
+                                bottom: 20.0,
+                                left: 10.0,
+                                right: 10.0),
+                            child: ButtonTheme(
+                              height: 60.0,
+                              minWidth: 400.0,
+                              child: RaisedButton(
+                                color: Theme.of(context).primaryColor,
+                                onPressed: () {
+                                  return _callNumber(
+                                      this.singleShoppingListData["helpee"]
+                                          ["phoneNumber"]);
+                                },
+                                child: Text(
+                                  "Call ${this.singleShoppingListData["helpee"]["name"]}",
+                                  style: GoogleFonts.pangolin(
+                                    textStyle: TextStyle(
+                                        fontSize: 25.0, color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : null,
+                  ),
+                  Center(
+                    child: (widget.screen == "login")
+                        ? Padding(
+                            padding: EdgeInsets.only(
+                                bottom: 20.0, left: 10.0, right: 10.0),
+                            child: ButtonTheme(
+                              height: 60.0,
+                              minWidth: 400.0,
+                              child: RaisedButton(
+                                color: Theme.of(context).primaryColorDark,
+                                onPressed: () {},
+                                child: Text(
+                                  "Mark it delivered",
+                                  style: GoogleFonts.pangolin(
+                                    textStyle: TextStyle(
+                                        fontSize: 25.0, color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : null,
+                  ),
                 ],
               ),
             ),
           ),
         ),
       );
+    }
+  }
+
+  _callNumber(number) async {
+    print(number);
+    print(number.runtimeType);
+    String url = 'tel:${number.toString()}';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 
