@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../transformers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import '../transformers.dart';
 
 class shoppingListDetailed extends StatefulWidget {
   GoogleMapController mapController;
   final String shoppingListId;
   final String volunteerId;
+  final String screen;
   shoppingListDetailed(
-      {Key key, @required this.shoppingListId, @required this.volunteerId})
+      {Key key,
+      @required this.shoppingListId,
+      @required this.volunteerId,
+      this.screen})
       : super(key: key);
 
   @override
@@ -29,7 +34,6 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
 
   @override
   void initState() {
-    // print("ID ${widget.shoppingListId} ${widget.volunteerId}");
     super.initState();
     getShoppingListById(widget.shoppingListId).then((shoppingListData) {
       setSingleShoppingList(shoppingListData);
@@ -43,7 +47,8 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
               child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.green))));
     } else {
-      // print("in build: >> ${this.singleShoppingListData}");
+      print(
+          "ID ${widget.shoppingListId} ${widget.volunteerId} ${widget.screen}");
       widget.markers.add(
         Marker(
           markerId: MarkerId('1'),
@@ -59,28 +64,55 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
       return Scaffold(
         appBar: AppBar(
             title: Text(
-                "${this.singleShoppingListData["helpee"]["name"]}'s Shopping List")),
+          "${this.singleShoppingListData["helpee"]["name"]}",
+          style: GoogleFonts.londrinaShadow(
+              textStyle: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white,
+                  letterSpacing: 1.5),
+              fontSize: 40.0),
+        )),
         backgroundColor: Theme.of(context).accentColor,
         body: Container(
           child: Center(
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  RaisedButton(
-                    color: Theme.of(context).primaryColor,
-                    onPressed: () {
-                      pickUpShoppingList(
-                          widget.shoppingListId, widget.volunteerId);
-                    },
-                    child: Text(
-                      "Help ${this.singleShoppingListData["helpee"]["name"]}!",
-                      textScaleFactor: 1.2,
+                  Padding(
+                    padding:
+                        EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
+                    child: ButtonTheme(
+                      height: 60.0,
+                      minWidth: 400.0,
+                      child: RaisedButton(
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          pickUpShoppingList(
+                              widget.shoppingListId, widget.volunteerId);
+                        },
+                        child: Text(
+                          "Help ${this.singleShoppingListData["helpee"]["name"]}!",
+                          style: GoogleFonts.pangolin(
+                            textStyle:
+                                TextStyle(fontSize: 25.0, color: Colors.white),
+                          ),
+                        ),
+                      ),
                     ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.0),
+                    child: Text("Posted on $formattedDate.",
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                              fontSize: 18,
+                              color: Theme.of(context).primaryColorDark),
+                        )),
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 10.0, right: 10.0),
                     child: Padding(
-                      padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                      padding: EdgeInsets.only(top: 5.0, bottom: 20.0),
                       child: Container(
                         decoration: BoxDecoration(
                             border: Border.all(
@@ -96,15 +128,29 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                       ),
                     ),
                   ),
+                  // Padding(
+                  //   padding: EdgeInsets.only(right: 10.0),
+                  //   child: Align(
+                  //       alignment: Alignment.center,
+                  //       child: Image.asset(
+                  //         "images/groceries/mix.png",
+                  //         width: 50.0,
+                  //       )),
+                  // ),
                   Padding(
-                    padding: EdgeInsets.only(top: 20.0),
+                    padding: EdgeInsets.only(top: 10.0),
                     child: Text(
-                        "${this.singleShoppingListData["helpee"]["name"]} sent this request on $formattedDate"),
+                        "See below ${this.singleShoppingListData["helpee"]["name"]}'s approximate location.",
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                              fontSize: 18,
+                              color: Theme.of(context).primaryColorDark),
+                        )),
                   ),
                   Container(
                     height: 300.0,
                     child: Padding(
-                      padding: EdgeInsets.all(20.0),
+                      padding: EdgeInsets.only(left: 20.0, right: 20.0),
                       child: GoogleMap(
                         mapType: MapType.normal,
                         myLocationEnabled: true,
@@ -125,18 +171,29 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                       ),
                     ),
                   ),
-                  RaisedButton(
-                    color: Theme.of(context).primaryColor,
-                    onPressed: () {
-                      return _launchURL(
-                          this.singleShoppingListData["helpee"]
-                              ["locationLatLng"][0],
-                          this.singleShoppingListData["helpee"]
-                              ["locationLatLng"][1]);
-                    },
-                    child: Text(
-                      "Open ${this.singleShoppingListData["helpee"]["name"]}'s Location in Google Maps",
-                      textScaleFactor: 1.2,
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: 20.0, bottom: 20.0, left: 10.0, right: 10.0),
+                    child: ButtonTheme(
+                      height: 60.0,
+                      minWidth: 400.0,
+                      child: RaisedButton(
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          return _launchURL(
+                              this.singleShoppingListData["helpee"]
+                                  ["locationLatLng"][0],
+                              this.singleShoppingListData["helpee"]
+                                  ["locationLatLng"][1]);
+                        },
+                        child: Text(
+                          "Open in Google Maps",
+                          style: GoogleFonts.pangolin(
+                            textStyle:
+                                TextStyle(fontSize: 25.0, color: Colors.white),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],

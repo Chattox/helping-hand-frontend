@@ -141,9 +141,12 @@ class _LoginState extends State<Login> {
                             return Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => shoppingListDetailed(
-                                      shoppingListId: data["shoppingListId"][0]
-                                          ["_id"])),
+                                builder: (context) => shoppingListDetailed(
+                                    shoppingListId: data["shoppingListId"][0]
+                                        ["_id"],
+                                    volunteerId: data["_id"],
+                                    screen: "login"),
+                              ),
                             );
                           }
                           if (returnedUserType == "helpee") {

@@ -33,7 +33,6 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
   }
 
   Widget build(BuildContext context) {
-    print("userdata >>> ${widget.userData["_id"]}");
     if (shoppingListsData == null) {
       return Center(
           child: Container(
@@ -94,9 +93,9 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => shoppingListDetailed(
-                              shoppingListId: shoppingListsData[index]["_id"],
-                              volunteerId: widget.userData["_id"],
-                            ),
+                                shoppingListId: shoppingListsData[index]["_id"],
+                                volunteerId: widget.userData["_id"],
+                                screen: "dashboard"),
                           ),
                         );
                       },
