@@ -1,9 +1,10 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
-import 'package:helping_hand_frontend/screens/login.dart';
+import 'package:helping_hand_frontend/transformers.dart';
 import './imageCapture.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HelpeeDashboard extends StatefulWidget {
   final Map userData;
@@ -13,14 +14,13 @@ class HelpeeDashboard extends StatefulWidget {
 }
 
 class _HelpeeDashboardState extends State<HelpeeDashboard> {
+  String parsedDate;
   Map shoppingListData;
-  DateTime parsedDate;
   bool orderReceived = false;
 
   void setShoppingList(shoppingList) {
-    var date = new DateTime.fromMicrosecondsSinceEpoch(
-            int.parse(shoppingList["createdAt"]) * 1000)
-        .toLocal();
+    var date = formatDate(shoppingList["createdAt"]);
+
     setState(() {
       shoppingListData = shoppingList;
       parsedDate = date;
@@ -46,13 +46,25 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
     }
     if (shoppingListData == null) {
       return Center(
-          child: Container(
-              child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.green))));
+        child: Container(
+          child: CircularProgressIndicator(
+            valueColor:
+                AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
+          ),
+        ),
+      );
     } else {
       return Scaffold(
         appBar: AppBar(
-          title: Text("Current Shopping Order"),
+          title: Text(
+            "My Shopping List",
+            style: GoogleFonts.londrinaShadow(
+                textStyle: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white,
+                    letterSpacing: 1.5),
+                fontSize: 40.0),
+          ),
           automaticallyImplyLeading: false,
         ),
         backgroundColor: Theme.of(context).accentColor,
@@ -67,62 +79,87 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
           },
         ),
         body: Container(
-          padding: EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(5.0),
           child: Center(
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                  padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
                   child: FadeInImage.memoryNetwork(
-                    placeholder: kTransparentImage,
-                    image: '${shoppingListData["listImage"]}',
-                    imageSemanticLabel: 'My Shopping List',
-                    height: 325.0,
-                  ),
+                      placeholder: kTransparentImage,
+                      image: '${shoppingListData["listImage"]}',
+                      imageSemanticLabel: 'My Shopping List',
+                      height: 275.0),
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 7.5),
                   child: Text(
-                      "Order status is: ${shoppingListData["orderStatus"]}"),
+                      "Order status is: ${shoppingListData["orderStatus"]}",
+                      style: Theme.of(context).textTheme.body1),
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 7.5),
-                  child: Text("Date created: $parsedDate"),
+                  child: Text("Date: $parsedDate",
+                      style: Theme.of(context).textTheme.body1),
                 ),
+                if (shoppingListData["volunteer"] != null)
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 7.5),
+                    child: Text(
+                        "${shoppingListData["volunteer"]["name"]} is assigned to your order. \n They can get in touch with you via your phone number.",
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.body1),
+                  ),
                 if (shoppingListData["volunteer"] == null)
                   Padding(
                     padding: EdgeInsets.only(bottom: 7.5),
                     child: Text(
-                      "Volunteer is not yet assigned to your order. \nPlease check back later",
-                      textAlign: TextAlign.center,
-                    ),
+                        "Volunteer is not yet assigned to your order. \nPlease check back later",
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.body1),
                   ),
                 if (shoppingListData["volunteer"] != null)
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 20.0),
-                    child: Text("Contact volunteer: phone number"),
-                  ),
+                  Text(
+                      "Contact ${shoppingListData["volunteer"]["name"]}: ${shoppingListData["volunteer"]["phoneNumber"]}",
+                      style: Theme.of(context).textTheme.body1),
                 if (orderReceived == false)
-                  RaisedButton(
-                    color: Theme.of(context).primaryColor,
-                    onPressed: () {
-                      updateShoppingListStatus(
-                              widget.userData["shoppingListId"][0]["_id"])
-                          .then((data) {
-                        setState(() {
-                          orderReceived = true;
-                        });
-                      });
-                    },
-                    child: Text(
-                      "Order Received",
-                      textScaleFactor: 1.2,
+                  Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: ButtonTheme(
+                      height: 60.0,
+                      minWidth: 400.0,
+                      child: RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                          side: BorderSide(
+                              color: Theme.of(context).primaryColor,
+                              width: 3.0),
+                        ),
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          updateShoppingListStatus(
+                                  widget.userData["shoppingListId"][0]["_id"])
+                              .then((data) {
+                            setState(() {
+                              orderReceived = true;
+                            });
+                          });
+                        },
+                        child: Text(
+                          "Order Received",
+                          style: GoogleFonts.pangolin(
+                            textStyle:
+                                TextStyle(fontSize: 25.0, color: Colors.white),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 if (orderReceived == true)
                   Container(
                       margin: EdgeInsets.only(top: 10.0),
-                      child: Text("You have marked your order as complete."))
+                      child: Text("You have marked your order as complete.",
+                          style: Theme.of(context).textTheme.body1))
               ],
             ),
           ),
@@ -138,6 +175,10 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
     orderStatus
     createdAt
     updatedAt
+    volunteer {
+      name
+      phoneNumber
+    }
 }
 }''';
     final HttpLink httpLink = HttpLink(
