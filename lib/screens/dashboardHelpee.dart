@@ -5,6 +5,7 @@ import './imageCapture.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HelpeeDashboard extends StatefulWidget {
   final Map userData;
@@ -110,11 +111,8 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.body1),
                     ),
-                  if (shoppingListData["volunteer"] != null)
-                    Text(
-                        "Contact ${shoppingListData["volunteer"]["name"]}: ${shoppingListData["volunteer"]["phoneNumber"]}",
-                        style: Theme.of(context).textTheme.body1),
-                  if (orderReceived == false)
+                  if (orderReceived == false &&
+                      shoppingListData["volunteer"] != null)
                     Padding(
                       padding: EdgeInsets.all(10.0),
                       child: ButtonTheme(
@@ -149,9 +147,36 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
                     ),
                   if (orderReceived == true)
                     Container(
-                      margin: EdgeInsets.only(top: 10.0),
+                      margin: EdgeInsets.only(top: 3.0, bottom: 5.0),
                       child: Text("You have marked your order as complete.",
                           style: Theme.of(context).textTheme.body1),
+                    ),
+                  if (shoppingListData["volunteer"] != null)
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: ButtonTheme(
+                        height: 60.0,
+                        minWidth: 400.0,
+                        child: RaisedButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.0),
+                              side: BorderSide(
+                                  color: Theme.of(context).primaryColor,
+                                  width: 3.0),
+                            ),
+                            color: Theme.of(context).primaryColor,
+                            child: Text(
+                              "Call ${shoppingListData["volunteer"]["name"]}",
+                              style: GoogleFonts.pangolin(
+                                textStyle: TextStyle(
+                                    fontSize: 25.0, color: Colors.white),
+                              ),
+                            ),
+                            onPressed: () {
+                              return _callNumber(
+                                  shoppingListData["volunteer"]["phoneNumber"]);
+                            }),
+                      ),
                     ),
                   Padding(
                     padding: EdgeInsets.only(
@@ -239,5 +264,14 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
         await client.query(QueryOptions(documentNode: gql(shoppingListQuery)));
     Map shoppingListUpdates = response.data["updateShoppingList"];
     return shoppingListUpdates;
+  }
+
+  void _callNumber(number) async {
+    String url = 'tel:${number.toString()}';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
