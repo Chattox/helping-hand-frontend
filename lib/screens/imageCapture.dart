@@ -53,7 +53,7 @@ class _ImageCaptureState extends State<ImageCapture> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Your Shopping List",
+        title: Text("Add A List",
             style: GoogleFonts.londrinaShadow(
                 textStyle: TextStyle(
                     fontWeight: FontWeight.w400,
@@ -66,18 +66,18 @@ class _ImageCaptureState extends State<ImageCapture> {
       bottomNavigationBar: BottomAppBar(
         color: Theme.of(context).accentColor,
         elevation: 0.0,
-        child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+        child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
           Padding(
-            padding: EdgeInsets.only(bottom: 20.0, right: 20.0),
+            padding: EdgeInsets.only(bottom: 20.0, left: 20.0),
             child: Image.asset(
               "images/groceries/shopping-list-basket.png",
-              width: 80.0,
+              width: 60.0,
             ),
           ),
         ]),
       ),
       body: Container(
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -161,20 +161,37 @@ class _ImageCaptureState extends State<ImageCapture> {
                 Image.file(
                   _imageFile,
                   alignment: Alignment.center,
-                  height: 400.0,
+                  height: 250.0,
                   fit: BoxFit.scaleDown,
                 ),
                 Column(
                   children: <Widget>[
-                    Container(
-                      width: 280.0,
-                      child: FlatButton.icon(
-                        color: Theme.of(context).primaryColor,
-                        label: Text("Crop"),
-                        icon: Icon(Icons.crop),
-                        onPressed: _cropImage,
+                    Padding(
+                      padding: EdgeInsets.only(
+                          top: 7.0, right: 10.0, left: 10.0, bottom: 5.0),
+                      child: ButtonTheme(
+                        height: 40.0,
+                        minWidth: 400.0,
+                        child: RaisedButton.icon(
+                          color: Theme.of(context).primaryColor,
+                          icon: Icon(Icons.crop, color: Colors.white),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16.0),
+                            side: BorderSide(
+                                color: Theme.of(context).primaryColor,
+                                width: 3.0),
+                          ),
+                          label: Text(
+                            "Crop",
+                            style: GoogleFonts.pangolin(
+                              textStyle: TextStyle(
+                                  fontSize: 20.0, color: Colors.white),
+                            ),
+                          ),
+                          onPressed: _cropImage,
+                        ),
                       ),
-                    )
+                    ),
                   ],
                 ),
                 Uploader(file: _imageFile, userId: widget.userId)
@@ -321,26 +338,55 @@ class _UploaderState extends State<Uploader> {
       return Container(
         child: Column(
           children: <Widget>[
-            Container(
-              width: 280.0,
-              child: FlatButton.icon(
-                color: Theme.of(context).primaryColor,
-                label: Text('Upload image'),
-                icon: Icon(Icons.cloud_upload),
-                onPressed: _startUpload,
+            Padding(
+              padding: EdgeInsets.only(right: 10.0, left: 10.0, bottom: 5.0),
+              child: ButtonTheme(
+                height: 40.0,
+                minWidth: 400.0,
+                child: RaisedButton.icon(
+                  color: Theme.of(context).primaryColor,
+                  icon: Icon(Icons.cloud_upload, color: Colors.white),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.0),
+                    side: BorderSide(
+                        color: Theme.of(context).primaryColor, width: 3.0),
+                  ),
+                  label: Text(
+                    "Add your image",
+                    style: GoogleFonts.pangolin(
+                      textStyle: TextStyle(fontSize: 20.0, color: Colors.white),
+                    ),
+                  ),
+                  onPressed: _startUpload,
+                ),
               ),
             ),
-            Container(
-              width: 280.0,
-              child: FlatButton.icon(
-                color: Theme.of(context).primaryColor,
-                label: Text("Back"),
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+            Padding(
+              padding: EdgeInsets.only(
+                  top: 7.0, right: 10.0, left: 10.0, bottom: 5.0),
+              child: ButtonTheme(
+                height: 40.0,
+                minWidth: 400.0,
+                child: RaisedButton.icon(
+                  color: Theme.of(context).primaryColor,
+                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.0),
+                    side: BorderSide(
+                        color: Theme.of(context).primaryColor, width: 3.0),
+                  ),
+                  label: Text(
+                    "Back to Dashboard",
+                    style: GoogleFonts.pangolin(
+                      textStyle: TextStyle(fontSize: 20.0, color: Colors.white),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
               ),
-            )
+            ),
           ],
         ),
       );
