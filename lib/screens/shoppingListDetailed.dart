@@ -63,7 +63,8 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
       var formattedDate = formatDate(this.singleShoppingListData["createdAt"]);
       return Scaffold(
         appBar: AppBar(
-            automaticallyImplyLeading: false,
+            automaticallyImplyLeading:
+                (widget.screen == "dashboard") ? true : false,
             title: Text(
               "${this.singleShoppingListData["helpee"]["name"]}",
               style: GoogleFonts.londrinaShadow(
@@ -109,13 +110,15 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                             child: ButtonTheme(
                               height: 60.0,
                               minWidth: 400.0,
-                              child: RaisedButton(
+                              child: RaisedButton.icon(
                                 color: Theme.of(context).primaryColor,
+                                icon: Icon(Icons.favorite_border,
+                                    color: Colors.white),
                                 onPressed: () {
                                   pickUpShoppingList(widget.shoppingListId,
                                       widget.volunteerId);
                                 },
-                                child: Text(
+                                label: Text(
                                   // "Help ${this.singleShoppingListData["helpee"]["name"]}!",
                                   "I can help!",
                                   style: GoogleFonts.pangolin(
@@ -201,8 +204,9 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                     child: ButtonTheme(
                       height: 60.0,
                       minWidth: 400.0,
-                      child: RaisedButton(
+                      child: RaisedButton.icon(
                         color: Theme.of(context).primaryColor,
+                        icon: Icon(Icons.location_on, color: Colors.white),
                         onPressed: () {
                           return _launchURL(
                               this.singleShoppingListData["helpee"]
@@ -210,7 +214,7 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                               this.singleShoppingListData["helpee"]
                                   ["locationLatLng"][1]);
                         },
-                        child: Text(
+                        label: Text(
                           "Open in Google Maps",
                           style: GoogleFonts.pangolin(
                             textStyle:
@@ -240,7 +244,7 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                           ? Padding(
                               padding: EdgeInsets.all(10.0),
                               child: Text(
-                                  "${this.singleShoppingListData["helpee"]["streetAddress"]}\n${this.singleShoppingListData["helpee"]["city"]}\n${this.singleShoppingListData["helpee"]["postcode"]}\n\nPhone: ${this.singleShoppingListData["helpee"]["phoneNumber"]}",
+                                  "${this.singleShoppingListData["helpee"]["streetAddress"]}\n${this.singleShoppingListData["helpee"]["city"]}\n${this.singleShoppingListData["helpee"]["postcode"]}",
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.lato(
                                     textStyle: TextStyle(
@@ -261,14 +265,15 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                             child: ButtonTheme(
                               height: 60.0,
                               minWidth: 400.0,
-                              child: RaisedButton(
+                              child: RaisedButton.icon(
+                                icon: Icon(Icons.call, color: Colors.white),
                                 color: Theme.of(context).primaryColor,
                                 onPressed: () {
                                   return _callNumber(
                                       this.singleShoppingListData["helpee"]
                                           ["phoneNumber"]);
                                 },
-                                child: Text(
+                                label: Text(
                                   "Call ${this.singleShoppingListData["helpee"]["name"]}",
                                   style: GoogleFonts.pangolin(
                                     textStyle: TextStyle(
@@ -288,10 +293,11 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                             child: ButtonTheme(
                               height: 60.0,
                               minWidth: 400.0,
-                              child: RaisedButton(
+                              child: RaisedButton.icon(
                                 color: Theme.of(context).primaryColorDark,
+                                icon: Icon(Icons.loyalty, color: Colors.white),
                                 onPressed: () {},
-                                child: Text(
+                                label: Text(
                                   "Mark it delivered",
                                   style: GoogleFonts.pangolin(
                                     textStyle: TextStyle(
