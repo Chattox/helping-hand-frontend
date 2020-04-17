@@ -7,113 +7,145 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class shoppingListDetailed extends StatefulWidget {
   GoogleMapController mapController;
-  shoppingListDetailed({Key key, @required this.shoppingListData})
+  final String shoppingListId;
+  final String volunteerId;
+  shoppingListDetailed(
+      {Key key, @required this.shoppingListId, @required this.volunteerId})
       : super(key: key);
 
   @override
   _shoppingListDetailedState createState() => _shoppingListDetailedState();
-  final Map shoppingListData;
   Set<Marker> markers = Set();
 }
 
 class _shoppingListDetailedState extends State<shoppingListDetailed> {
+  var singleShoppingListData;
+
+  void setSingleShoppingList(shoppingList) {
+    setState(() {
+      singleShoppingListData = shoppingList;
+    });
+  }
+
   @override
+  void initState() {
+    // print("ID ${widget.shoppingListId} ${widget.volunteerId}");
+    super.initState();
+    getShoppingListById(widget.shoppingListId).then((shoppingListData) {
+      setSingleShoppingList(shoppingListData);
+    });
+  }
+
   Widget build(BuildContext context) {
-    widget.markers.add(
-      Marker(
-        markerId: MarkerId('1'),
-        position: LatLng(widget.shoppingListData["helpee"]["locationLatLng"][0],
-            widget.shoppingListData["helpee"]["locationLatLng"][1]),
-        infoWindow: InfoWindow(
-            title:
-                "${widget.shoppingListData["helpee"]["name"]}'s approximate location"),
-      ),
-    );
-    var formattedDate = formatDate(widget.shoppingListData["createdAt"]);
-    return Scaffold(
-      appBar: AppBar(
-          title: Text(
-              "${widget.shoppingListData["helpee"]["name"]}'s Shopping List")),
-      backgroundColor: Theme.of(context).accentColor,
-      body: Container(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                RaisedButton(
-                  color: Theme.of(context).primaryColor,
-                  onPressed: null,
-                  child: Text(
-                    "Help ${widget.shoppingListData["helpee"]["name"]}!",
-                    textScaleFactor: 1.2,
+    if (this.singleShoppingListData == null) {
+      return Center(
+          child: Container(
+              child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.green))));
+    } else {
+      // print("in build: >> ${this.singleShoppingListData}");
+      widget.markers.add(
+        Marker(
+          markerId: MarkerId('1'),
+          position: LatLng(
+              this.singleShoppingListData["helpee"]["locationLatLng"][0],
+              this.singleShoppingListData["helpee"]["locationLatLng"][1]),
+          infoWindow: InfoWindow(
+              title:
+                  "${this.singleShoppingListData["helpee"]["name"]}'s approximate location"),
+        ),
+      );
+      var formattedDate = formatDate(this.singleShoppingListData["createdAt"]);
+      return Scaffold(
+        appBar: AppBar(
+            title: Text(
+                "${this.singleShoppingListData["helpee"]["name"]}'s Shopping List")),
+        backgroundColor: Theme.of(context).accentColor,
+        body: Container(
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  RaisedButton(
+                    color: Theme.of(context).primaryColor,
+                    onPressed: () {
+                      pickUpShoppingList(
+                          widget.shoppingListId, widget.volunteerId);
+                    },
+                    child: Text(
+                      "Help ${this.singleShoppingListData["helpee"]["name"]}!",
+                      textScaleFactor: 1.2,
+                    ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                        color: Theme.of(context).primaryColor,
-                        width: 3,
-                      )),
-                      child: FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: '${widget.shoppingListData["listImage"]}',
-                        imageSemanticLabel: 'My Shopping List',
-                        height: 325.0,
+                  Container(
+                    margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                          color: Theme.of(context).primaryColor,
+                          width: 3,
+                        )),
+                        child: FadeInImage.memoryNetwork(
+                          placeholder: kTransparentImage,
+                          image: '${this.singleShoppingListData["listImage"]}',
+                          imageSemanticLabel: 'My Shopping List',
+                          height: 325.0,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 20.0),
-                  child: Text(
-                      "${widget.shoppingListData["helpee"]["name"]} sent this request on $formattedDate"),
-                ),
-                Container(
-                  height: 300.0,
-                  child: Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: GoogleMap(
-                      mapType: MapType.normal,
-                      myLocationEnabled: true,
-                      onMapCreated: (GoogleMapController controller) {
-                        widget.mapController = controller;
-                      },
-                      initialCameraPosition: CameraPosition(
-                        target: LatLng(
-                            widget.shoppingListData["helpee"]["locationLatLng"]
-                                [0],
-                            widget.shoppingListData["helpee"]["locationLatLng"]
-                                [1]),
-                        zoom: 15,
+                  Padding(
+                    padding: EdgeInsets.only(top: 20.0),
+                    child: Text(
+                        "${this.singleShoppingListData["helpee"]["name"]} sent this request on $formattedDate"),
+                  ),
+                  Container(
+                    height: 300.0,
+                    child: Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: GoogleMap(
+                        mapType: MapType.normal,
+                        myLocationEnabled: true,
+                        onMapCreated: (GoogleMapController controller) {
+                          widget.mapController = controller;
+                        },
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(
+                              this.singleShoppingListData["helpee"]
+                                  ["locationLatLng"][0],
+                              this.singleShoppingListData["helpee"]
+                                  ["locationLatLng"][1]),
+                          zoom: 15,
+                        ),
+                        scrollGesturesEnabled: true,
+                        zoomGesturesEnabled: true,
+                        markers: widget.markers,
                       ),
-                      scrollGesturesEnabled: true,
-                      zoomGesturesEnabled: true,
-                      markers: widget.markers,
                     ),
                   ),
-                ),
-                RaisedButton(
-                  color: Theme.of(context).primaryColor,
-                  onPressed: () {
-                    return _launchURL(
-                        widget.shoppingListData["helpee"]["locationLatLng"][0],
-                        widget.shoppingListData["helpee"]["locationLatLng"][1]);
-                  },
-                  child: Text(
-                    "Open ${widget.shoppingListData["helpee"]["name"]}'s Location in Google Maps",
-                    textScaleFactor: 1.2,
+                  RaisedButton(
+                    color: Theme.of(context).primaryColor,
+                    onPressed: () {
+                      return _launchURL(
+                          this.singleShoppingListData["helpee"]
+                              ["locationLatLng"][0],
+                          this.singleShoppingListData["helpee"]
+                              ["locationLatLng"][1]);
+                    },
+                    child: Text(
+                      "Open ${this.singleShoppingListData["helpee"]["name"]}'s Location in Google Maps",
+                      textScaleFactor: 1.2,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   _launchURL(lat, lon) async {
@@ -125,47 +157,41 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
     }
   }
 
-//   Future updateShoppingListStatus(shoppingListId, volunteerId) async {
-//     String shoppingListUpdateQuery = '''mutation shoppingListUpdateQuery {
-//   updateShoppingList(listId: "", volunteerId: "", volunteerComplete: true) {
-//     orderStatus
-//   }
-// }
-// ''';
-//     final HttpLink httpLink = HttpLink(
-//       uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
-//     );
-//     GraphQLClient client = GraphQLClient(
-//       cache: InMemoryCache(),
-//       link: httpLink,
-//     );
-//     final response = await client
-//         .query(QueryOptions(documentNode: gql(shoppingListUpdateQuery)));
-//     String result = response.data["shoppingListUpdateQuery"];
-//     print(result);
-//     return result;
-//   }
-
-//   Future updateVolunteersList(shoppingListId, volunteerId) async {
-//     String VolunteerUpdateQuery = '''mutation shoppingListUpdateQuery {
-//   updateShoppingList(listId: "", volunteerId: "", volunteerComplete: true) {
-//     orderStatus
-//   }
-// }
-// ''';
-//     final HttpLink httpLink = HttpLink(
-//       uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
-//     );
-//     GraphQLClient client = GraphQLClient(
-//       cache: InMemoryCache(),
-//       link: httpLink,
-//     );
-//     final response = await client
-//         .query(QueryOptions(documentNode: gql(VolunteerUpdateQuery)));
-//     String result = response.data["shoppingListUpdateQuery"];
-//     print(result);
-//     return result;
-//   }
+  Future getShoppingListById(shoppingListId) async {
+    String shoppingListByIdQuery = '''query shoppingListByIdQuery {
+  shoppingListById(id: "$shoppingListId") {orderStatus createdAt listImage helpee  {name phoneNumber postcode streetAddress city locationLatLng}}
 }
+''';
+    final HttpLink httpLink = HttpLink(
+      uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
+    );
+    GraphQLClient client = GraphQLClient(
+      cache: InMemoryCache(),
+      link: httpLink,
+    );
+    final response = await client
+        .query(QueryOptions(documentNode: gql(shoppingListByIdQuery)));
+    Map result = response.data["shoppingListById"];
+    return result;
+  }
 
-// final Marker marker = Marker(markerId: )
+  Future pickUpShoppingList(shoppingListId, volunteerId) async {
+    print("in query $shoppingListId, $volunteerId");
+    String pickUpShoppingListQuery = '''mutation pickUpShoppingListQuery {
+  updateShoppingList(listId: "$shoppingListId", volunteerId: "$volunteerId") {orderStatus}
+}
+''';
+    // final HttpLink httpLink = HttpLink(
+    //   uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
+    // );
+    // GraphQLClient client = GraphQLClient(
+    //   cache: InMemoryCache(),
+    //   link: httpLink,
+    // );
+    // final response = await client
+    //     .query(QueryOptions(documentNode: gql(pickUpShoppingListQuery)));
+    // String result = response.data["updateShoppingList"];
+    // print(result);
+    // return result;
+  }
+}

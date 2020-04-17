@@ -33,7 +33,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
   }
 
   Widget build(BuildContext context) {
-    print("sorted>>>> $shoppingListsData");
+    print("userdata >>> ${widget.userData["_id"]}");
     if (shoppingListsData == null) {
       return Center(
           child: Container(
@@ -94,7 +94,8 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => shoppingListDetailed(
-                              shoppingListData: shoppingListsData[index],
+                              shoppingListId: shoppingListsData[index]["_id"],
+                              volunteerId: widget.userData["_id"],
                             ),
                           ),
                         );
@@ -111,7 +112,6 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
   }
 
   Future queryBuilder() async {
-    print(widget.userData["_id"]);
     String shoppingListsQuery = '''query shoppingListsQuery{
   filterByDistance(target: "${widget.userData["_id"]}") {
 		_id
