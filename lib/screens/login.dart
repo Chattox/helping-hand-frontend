@@ -5,6 +5,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import './dashboardHelpee.dart';
 import './dashboardVolunteer.dart';
+import './shoppingListDetailed.dart';
 
 class Login extends StatefulWidget {
   final String screen;
@@ -125,12 +126,27 @@ class _LoginState extends State<Login> {
                           });
                           return user;
                         }).then((data) {
-                          if (returnedUserType == "volunteer") {
+                          print("in login >> $data");
+                          if (returnedUserType == "volunteer" &&
+                              data["shoppingListId"].length == 0) {
                             return Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
                                       VolunteerDashboard(userData: data)),
+                            );
+                          }
+                          if (returnedUserType == "volunteer" &&
+                              data["shoppingListId"].length != 0) {
+                            return Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => shoppingListDetailed(
+                                    shoppingListId: data["shoppingListId"][0]
+                                        ["_id"],
+                                    volunteerId: data["_id"],
+                                    screen: "login"),
+                              ),
                             );
                           }
                           if (returnedUserType == "helpee") {
