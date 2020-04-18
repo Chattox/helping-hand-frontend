@@ -33,7 +33,13 @@ class _RegistrationState extends State<Registration> {
   String enteredCity = "";
   double enteredDistanceToTravel = 5.0;
 
+  bool isButtonDisabled = false;
+
   @override
+  void initState() {
+    isButtonDisabled = false;
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -313,43 +319,63 @@ class _RegistrationState extends State<Registration> {
                             color: Theme.of(context).primaryColor, width: 3.0),
                       ),
                       color: Theme.of(context).primaryColor,
-                      child: Text(
-                        "Register",
-                        style: GoogleFonts.pangolin(
-                          textStyle:
-                              TextStyle(fontSize: 25.0, color: Colors.white),
-                        ),
-                      ),
-                      onPressed: () {
-                        if (_formKey.currentState.validate()) {
-                          setState(() {
-                            enteredName = nameController.text;
-                            enteredEmail = emailController.text;
-                            enteredPassword = passwordController.text;
-                            enteredPhoneNumber =
-                                int.parse(phoneNumberController.text);
-                            enteredPostcode = postcodeController.text;
-                            enteredStreetAddress = streetAddressController.text;
-                            enteredCity = cityController.text;
-                          });
-                          queryBuilder(
-                                  widget.screen,
-                                  enteredName,
-                                  enteredEmail,
-                                  enteredPassword,
-                                  enteredPhoneNumber,
-                                  enteredPostcode,
-                                  enteredStreetAddress,
-                                  enteredCity,
-                                  enteredDistanceToTravel)
-                              .then((data) {
-                            if (data["createUser"]["name"] != null) {
-                              navigateToPage();
-                              reset();
-                            }
-                          });
-                        }
-                      },
+                      child: isButtonDisabled
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                  Image.asset(
+                                    "images/loader.gif",
+                                    width: 30.0,
+                                  ),
+                                  Text(
+                                    "Processing...",
+                                    style: GoogleFonts.pangolin(
+                                      textStyle: TextStyle(
+                                          fontSize: 25.0, color: Colors.white),
+                                    ),
+                                  )
+                                ])
+                          : Text(
+                              "Register",
+                              style: GoogleFonts.pangolin(
+                                textStyle: TextStyle(
+                                    fontSize: 25.0, color: Colors.white),
+                              ),
+                            ),
+                      onPressed: isButtonDisabled
+                          ? null
+                          : () {
+                              setState(() => isButtonDisabled = true);
+                              if (_formKey.currentState.validate()) {
+                                setState(() {
+                                  enteredName = nameController.text;
+                                  enteredEmail = emailController.text;
+                                  enteredPassword = passwordController.text;
+                                  enteredPhoneNumber =
+                                      int.parse(phoneNumberController.text);
+                                  enteredPostcode = postcodeController.text;
+                                  enteredStreetAddress =
+                                      streetAddressController.text;
+                                  enteredCity = cityController.text;
+                                });
+                                queryBuilder(
+                                        widget.screen,
+                                        enteredName,
+                                        enteredEmail,
+                                        enteredPassword,
+                                        enteredPhoneNumber,
+                                        enteredPostcode,
+                                        enteredStreetAddress,
+                                        enteredCity,
+                                        enteredDistanceToTravel)
+                                    .then((data) {
+                                  if (data["createUser"]["name"] != null) {
+                                    navigateToPage();
+                                    reset();
+                                  }
+                                });
+                              }
+                            },
                     ),
                   ),
                 )
