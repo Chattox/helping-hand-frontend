@@ -61,6 +61,7 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
         ),
       );
       var formattedDate = formatDate(this.singleShoppingListData["createdAt"]);
+
       return Scaffold(
         appBar: AppBar(
             automaticallyImplyLeading:
@@ -116,7 +117,21 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                                     color: Colors.white),
                                 onPressed: () {
                                   pickUpShoppingList(widget.shoppingListId,
-                                      widget.volunteerData["_id"]);
+                                          widget.volunteerData["_id"])
+                                      .then((data) {
+                                    return Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            shoppingListDetailed(
+                                                shoppingListId:
+                                                    widget.shoppingListId,
+                                                volunteerData:
+                                                    widget.volunteerData,
+                                                screen: "login"),
+                                      ),
+                                    );
+                                  });
                                 },
                                 label: Text(
                                   // "Help ${this.singleShoppingListData["helpee"]["name"]}!",
@@ -381,7 +396,7 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
     );
     final response = await client
         .query(QueryOptions(documentNode: gql(pickUpShoppingListQuery)));
-    String result = response.data["updateShoppingList"];
-    return result;
+    String result = response.data["updateShoppingList"]["orderStatus"];
+    return "hello";
   }
 }
