@@ -22,7 +22,13 @@ class _LoginState extends State<Login> {
   static TextEditingController emailController = TextEditingController();
   static TextEditingController passwordController = TextEditingController();
 
+  bool isButtonDisabled = false;
+
   @override
+  void initState() {
+    isButtonDisabled = false;
+  }
+
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
 
@@ -113,59 +119,80 @@ class _LoginState extends State<Login> {
                             color: Theme.of(context).primaryColor, width: 3.0),
                       ),
                       color: Theme.of(context).primaryColor,
-                      onPressed: () {
-                        setState(() {
-                          enteredEmailAddress = emailController.text;
-                          enteredPassword = passwordController.text;
-                        });
-                        queryBuilder(enteredEmailAddress, enteredPassword)
-                            .then((user) {
-                          String userType = user["userType"];
-                          setState(() {
-                            returnedUserType = userType;
-                          });
-                          return user;
-                        }).then((data) {
-                          if (returnedUserType == "volunteer" &&
-                              data["shoppingListId"].length == 0) {
-                            return Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      VolunteerDashboard(userData: data)),
-                            );
-                          }
-                          if (returnedUserType == "volunteer" &&
-                              data["shoppingListId"].length != 0) {
-                            return Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => shoppingListDetailed(
-                                    shoppingListId: data["shoppingListId"][0]
-                                        ["_id"],
-                                    volunteerData: data,
-                                    screen: "login"),
+                      onPressed: isButtonDisabled
+                          ? null
+                          : () {
+                              setState(() => isButtonDisabled = true);
+                              setState(() {
+                                enteredEmailAddress = emailController.text;
+                                enteredPassword = passwordController.text;
+                              });
+                              queryBuilder(enteredEmailAddress, enteredPassword)
+                                  .then((user) {
+                                String userType = user["userType"];
+                                setState(() {
+                                  returnedUserType = userType;
+                                });
+                                return user;
+                              }).then((data) {
+                                if (returnedUserType == "volunteer" &&
+                                    data["shoppingListId"].length == 0) {
+                                  return Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            VolunteerDashboard(userData: data)),
+                                  );
+                                }
+                                if (returnedUserType == "volunteer" &&
+                                    data["shoppingListId"].length != 0) {
+                                  return Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          shoppingListDetailed(
+                                              shoppingListId:
+                                                  data["shoppingListId"][0]
+                                                      ["_id"],
+                                              volunteerData: data,
+                                              screen: "login"),
+                                    ),
+                                  );
+                                }
+                                if (returnedUserType == "helpee") {
+                                  return Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            HelpeeDashboard(userData: data)),
+                                  );
+                                }
+                                return null;
+                              });
+                            },
+                      child: isButtonDisabled
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                  Image.asset(
+                                    "images/loader.gif",
+                                    width: 30.0,
+                                  ),
+                                  Text(
+                                    "Logging you in...",
+                                    style: GoogleFonts.pangolin(
+                                      textStyle: TextStyle(
+                                          fontSize: 25.0, color: Colors.white),
+                                    ),
+                                  )
+                                ])
+                          : Text(
+                              "Login",
+                              style: GoogleFonts.pangolin(
+                                textStyle: TextStyle(
+                                    fontSize: 25.0, color: Colors.white),
                               ),
-                            );
-                          }
-                          if (returnedUserType == "helpee") {
-                            return Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      HelpeeDashboard(userData: data)),
-                            );
-                          }
-                          return null;
-                        });
-                      },
-                      child: Text(
-                        "Login",
-                        style: GoogleFonts.pangolin(
-                          textStyle:
-                              TextStyle(fontSize: 25.0, color: Colors.white),
-                        ),
-                      ),
+                            ),
                     ),
                   ),
                 )
