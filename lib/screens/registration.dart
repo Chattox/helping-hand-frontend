@@ -23,6 +23,7 @@ class _RegistrationState extends State<Registration> {
   TextEditingController streetAddressController = TextEditingController();
   TextEditingController cityController = TextEditingController();
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
   String enteredName = '';
   String enteredEmail = '';
@@ -32,6 +33,7 @@ class _RegistrationState extends State<Registration> {
   String enteredStreetAddress = '';
   String enteredCity = "";
   double enteredDistanceToTravel = 5.0;
+  bool checkboxValue = false;
 
   bool isButtonDisabled = false;
 
@@ -42,6 +44,7 @@ class _RegistrationState extends State<Registration> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
           "Registration",
@@ -308,6 +311,37 @@ class _RegistrationState extends State<Registration> {
                     ),
                   ),
                 Padding(
+                  padding: EdgeInsets.only(top: 7.0, bottom: 7.0, right: 20.0),
+                  child: CheckboxListTile(
+                    title: widget.screen == 'volunteer'
+                        ? Text(
+                            "Disclaimer: I confirm that I authorise my name and phone number to be shared with the person I am helping.",
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Theme.of(context).primaryColorDark),
+                              fontSize: 14.0,
+                            ),
+                            textAlign: TextAlign.justify)
+                        : Text(
+                            "Disclaimer: I confirm that I authorise my name and approximate location to be shared with all potential volunteers in my area and also my phone number and exact address to be shared with the person who helps me.",
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Theme.of(context).primaryColorDark),
+                              fontSize: 15.5,
+                            ),
+                            textAlign: TextAlign.justify),
+                    value: checkboxValue,
+                    activeColor: Theme.of(context).primaryColor,
+                    onChanged: (value) {
+                      setState(() {
+                        checkboxValue = value;
+                      });
+                    },
+                  ),
+                ),
+                Padding(
                   padding: EdgeInsets.only(top: 15.0),
                   child: ButtonTheme(
                     height: 60.0,
@@ -345,35 +379,40 @@ class _RegistrationState extends State<Registration> {
                       onPressed: isButtonDisabled
                           ? null
                           : () {
-                              setState(() => isButtonDisabled = true);
                               if (_formKey.currentState.validate()) {
-                                setState(() {
-                                  enteredName = nameController.text;
-                                  enteredEmail = emailController.text;
-                                  enteredPassword = passwordController.text;
-                                  enteredPhoneNumber =
-                                      int.parse(phoneNumberController.text);
-                                  enteredPostcode = postcodeController.text;
-                                  enteredStreetAddress =
-                                      streetAddressController.text;
-                                  enteredCity = cityController.text;
-                                });
-                                queryBuilder(
-                                        widget.screen,
-                                        enteredName,
-                                        enteredEmail,
-                                        enteredPassword,
-                                        enteredPhoneNumber,
-                                        enteredPostcode,
-                                        enteredStreetAddress,
-                                        enteredCity,
-                                        enteredDistanceToTravel)
-                                    .then((data) {
-                                  if (data["createUser"]["name"] != null) {
-                                    navigateToPage();
-                                    reset();
-                                  }
-                                });
+                                if (checkboxValue == false) {
+                                  _showSnackBar(
+                                      "Please confirm you have read our data protection terms.");
+                                } else {
+                                  setState(() => isButtonDisabled = true);
+                                  setState(() {
+                                    enteredName = nameController.text;
+                                    enteredEmail = emailController.text;
+                                    enteredPassword = passwordController.text;
+                                    enteredPhoneNumber =
+                                        int.parse(phoneNumberController.text);
+                                    enteredPostcode = postcodeController.text;
+                                    enteredStreetAddress =
+                                        streetAddressController.text;
+                                    enteredCity = cityController.text;
+                                  });
+                                  queryBuilder(
+                                          widget.screen,
+                                          enteredName,
+                                          enteredEmail,
+                                          enteredPassword,
+                                          enteredPhoneNumber,
+                                          enteredPostcode,
+                                          enteredStreetAddress,
+                                          enteredCity,
+                                          enteredDistanceToTravel)
+                                      .then((data) {
+                                    if (data["createUser"]["name"] != null) {
+                                      navigateToPage();
+                                      reset();
+                                    }
+                                  });
+                                }
                               }
                             },
                     ),
@@ -414,6 +453,13 @@ class _RegistrationState extends State<Registration> {
       context,
       MaterialPageRoute(builder: (context) => Login(screen: "registration")),
     );
+  }
+
+  void _showSnackBar(message) {
+    final snackBar = new SnackBar(
+      content: new Text(message),
+    );
+    _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
   Future queryBuilder(userType, name, email, password, phoneNumber, postcode,
