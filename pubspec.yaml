@@ -63,6 +63,7 @@ flutter:
     - images/groceries/shopping-list-basket.png
     - images/groceries/cheese.png
     - images/groceries/bag-of-groceries.png
+    - images/loader.gif
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

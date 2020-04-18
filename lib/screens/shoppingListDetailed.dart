@@ -158,72 +158,21 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                   //         width: 50.0,
                   //       )),
                   // ),
-                  Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text(
-                        "See below ${this.singleShoppingListData["helpee"]["name"]}'s approximate location.",
-                        textAlign: TextAlign.justify,
-                        style: GoogleFonts.lato(
-                          textStyle: TextStyle(
-                              fontSize: 18,
-                              color: Theme.of(context).primaryColorDark),
-                        )),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                        color: Colors.white,
-                        width: 5,
-                      )),
-                      height: 300.0,
-                      child: GoogleMap(
-                        mapType: MapType.normal,
-                        myLocationEnabled: true,
-                        onMapCreated: (GoogleMapController controller) {
-                          widget.mapController = controller;
-                        },
-                        initialCameraPosition: CameraPosition(
-                          target: LatLng(
-                              this.singleShoppingListData["helpee"]
-                                  ["locationLatLng"][0],
-                              this.singleShoppingListData["helpee"]
-                                  ["locationLatLng"][1]),
-                          zoom: 15,
-                        ),
-                        scrollGesturesEnabled: true,
-                        zoomGesturesEnabled: true,
-                        markers: widget.markers,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        top: 20.0, bottom: 20.0, left: 10.0, right: 10.0),
-                    child: ButtonTheme(
-                      height: 60.0,
-                      minWidth: 400.0,
-                      child: RaisedButton.icon(
-                        color: Theme.of(context).primaryColor,
-                        icon: Icon(Icons.location_on, color: Colors.white),
-                        onPressed: () {
-                          return _launchURL(
-                              this.singleShoppingListData["helpee"]
-                                  ["locationLatLng"][0],
-                              this.singleShoppingListData["helpee"]
-                                  ["locationLatLng"][1]);
-                        },
-                        label: Text(
-                          "Open in Google Maps",
-                          style: GoogleFonts.pangolin(
-                            textStyle:
-                                TextStyle(fontSize: 25.0, color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  Center(
+                      child: (widget.screen != "login")
+                          ? Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Text(
+                                  "See below ${this.singleShoppingListData["helpee"]["name"]}'s approximate location.",
+                                  textAlign: TextAlign.justify,
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(
+                                        fontSize: 18,
+                                        color:
+                                            Theme.of(context).primaryColorDark),
+                                  )),
+                            )
+                          : null),
                   Center(
                       child: (widget.screen == "login")
                           ? Padding(
@@ -284,6 +233,61 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                             ),
                           )
                         : null,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                        color: Colors.white,
+                        width: 5,
+                      )),
+                      height: 300.0,
+                      child: GoogleMap(
+                        mapType: MapType.normal,
+                        myLocationEnabled: true,
+                        onMapCreated: (GoogleMapController controller) {
+                          widget.mapController = controller;
+                        },
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(
+                              this.singleShoppingListData["helpee"]
+                                  ["locationLatLng"][0],
+                              this.singleShoppingListData["helpee"]
+                                  ["locationLatLng"][1]),
+                          zoom: 15,
+                        ),
+                        scrollGesturesEnabled: true,
+                        zoomGesturesEnabled: true,
+                        markers: widget.markers,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: 20.0, bottom: 20.0, left: 10.0, right: 10.0),
+                    child: ButtonTheme(
+                      height: 60.0,
+                      minWidth: 400.0,
+                      child: RaisedButton.icon(
+                        color: Theme.of(context).primaryColor,
+                        icon: Icon(Icons.location_on, color: Colors.white),
+                        onPressed: () {
+                          return _launchURL(
+                              this.singleShoppingListData["helpee"]
+                                  ["locationLatLng"][0],
+                              this.singleShoppingListData["helpee"]
+                                  ["locationLatLng"][1]);
+                        },
+                        label: Text(
+                          "Open in Google Maps",
+                          style: GoogleFonts.pangolin(
+                            textStyle:
+                                TextStyle(fontSize: 25.0, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                   Center(
                     child: (widget.screen == "login")
@@ -368,16 +372,16 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
   updateShoppingList(listId: "$shoppingListId", volunteerId: "$volunteerId") {orderStatus}
 }
 ''';
-    // final HttpLink httpLink = HttpLink(
-    //   uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
-    // );
-    // GraphQLClient client = GraphQLClient(
-    //   cache: InMemoryCache(),
-    //   link: httpLink,
-    // );
-    // final response = await client
-    //     .query(QueryOptions(documentNode: gql(pickUpShoppingListQuery)));
-    // String result = response.data["updateShoppingList"];
-    // return result;
+    final HttpLink httpLink = HttpLink(
+      uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
+    );
+    GraphQLClient client = GraphQLClient(
+      cache: InMemoryCache(),
+      link: httpLink,
+    );
+    final response = await client
+        .query(QueryOptions(documentNode: gql(pickUpShoppingListQuery)));
+    String result = response.data["updateShoppingList"];
+    return result;
   }
 }
