@@ -5,16 +5,18 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import '../transformers.dart';
+import '../screens/dashboardVolunteer.dart';
 
 class shoppingListDetailed extends StatefulWidget {
   GoogleMapController mapController;
   final String shoppingListId;
-  final String volunteerId;
+  // final String volunteerId;
+  final Map volunteerData;
   final String screen;
   shoppingListDetailed(
       {Key key,
       @required this.shoppingListId,
-      @required this.volunteerId,
+      @required this.volunteerData,
       this.screen})
       : super(key: key);
 
@@ -47,8 +49,6 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
               child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.green))));
     } else {
-      print(
-          "ID ${widget.shoppingListId} ${widget.volunteerId} ${widget.screen}");
       widget.markers.add(
         Marker(
           markerId: MarkerId('1'),
@@ -63,7 +63,8 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
       var formattedDate = formatDate(this.singleShoppingListData["createdAt"]);
       return Scaffold(
         appBar: AppBar(
-            automaticallyImplyLeading: false,
+            automaticallyImplyLeading:
+                (widget.screen == "dashboard") ? true : false,
             title: Text(
               "${this.singleShoppingListData["helpee"]["name"]}",
               style: GoogleFonts.londrinaShadow(
@@ -109,13 +110,15 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                             child: ButtonTheme(
                               height: 60.0,
                               minWidth: 400.0,
-                              child: RaisedButton(
+                              child: RaisedButton.icon(
                                 color: Theme.of(context).primaryColor,
+                                icon: Icon(Icons.favorite_border,
+                                    color: Colors.white),
                                 onPressed: () {
                                   pickUpShoppingList(widget.shoppingListId,
-                                      widget.volunteerId);
+                                      widget.volunteerData["_id"]);
                                 },
-                                child: Text(
+                                label: Text(
                                   // "Help ${this.singleShoppingListData["helpee"]["name"]}!",
                                   "I can help!",
                                   style: GoogleFonts.pangolin(
@@ -201,8 +204,9 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                     child: ButtonTheme(
                       height: 60.0,
                       minWidth: 400.0,
-                      child: RaisedButton(
+                      child: RaisedButton.icon(
                         color: Theme.of(context).primaryColor,
+                        icon: Icon(Icons.location_on, color: Colors.white),
                         onPressed: () {
                           return _launchURL(
                               this.singleShoppingListData["helpee"]
@@ -210,7 +214,7 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                               this.singleShoppingListData["helpee"]
                                   ["locationLatLng"][1]);
                         },
-                        child: Text(
+                        label: Text(
                           "Open in Google Maps",
                           style: GoogleFonts.pangolin(
                             textStyle:
@@ -240,7 +244,7 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                           ? Padding(
                               padding: EdgeInsets.all(10.0),
                               child: Text(
-                                  "${this.singleShoppingListData["helpee"]["streetAddress"]}\n${this.singleShoppingListData["helpee"]["city"]}\n${this.singleShoppingListData["helpee"]["postcode"]}\n\nPhone: ${this.singleShoppingListData["helpee"]["phoneNumber"]}",
+                                  "${this.singleShoppingListData["helpee"]["streetAddress"]}\n${this.singleShoppingListData["helpee"]["city"]}\n${this.singleShoppingListData["helpee"]["postcode"]}",
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.lato(
                                     textStyle: TextStyle(
@@ -261,14 +265,15 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                             child: ButtonTheme(
                               height: 60.0,
                               minWidth: 400.0,
-                              child: RaisedButton(
+                              child: RaisedButton.icon(
+                                icon: Icon(Icons.call, color: Colors.white),
                                 color: Theme.of(context).primaryColor,
                                 onPressed: () {
                                   return _callNumber(
                                       this.singleShoppingListData["helpee"]
                                           ["phoneNumber"]);
                                 },
-                                child: Text(
+                                label: Text(
                                   "Call ${this.singleShoppingListData["helpee"]["name"]}",
                                   style: GoogleFonts.pangolin(
                                     textStyle: TextStyle(
@@ -288,10 +293,20 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                             child: ButtonTheme(
                               height: 60.0,
                               minWidth: 400.0,
-                              child: RaisedButton(
+                              child: RaisedButton.icon(
                                 color: Theme.of(context).primaryColorDark,
-                                onPressed: () {},
-                                child: Text(
+                                icon: Icon(Icons.loyalty, color: Colors.white),
+                                onPressed: () {
+                                  return Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            VolunteerDashboard(
+                                                userData:
+                                                    widget.volunteerData)),
+                                  );
+                                },
+                                label: Text(
                                   "Mark it delivered",
                                   style: GoogleFonts.pangolin(
                                     textStyle: TextStyle(
@@ -313,8 +328,6 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
   }
 
   _callNumber(number) async {
-    print(number);
-    print(number.runtimeType);
     String url = 'tel:${number.toString()}';
     if (await canLaunch(url)) {
       await launch(url);
@@ -351,7 +364,6 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
   }
 
   Future pickUpShoppingList(shoppingListId, volunteerId) async {
-    print("in query $shoppingListId, $volunteerId");
     String pickUpShoppingListQuery = '''mutation pickUpShoppingListQuery {
   updateShoppingList(listId: "$shoppingListId", volunteerId: "$volunteerId") {orderStatus}
 }
@@ -366,7 +378,6 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
     // final response = await client
     //     .query(QueryOptions(documentNode: gql(pickUpShoppingListQuery)));
     // String result = response.data["updateShoppingList"];
-    // print(result);
     // return result;
   }
 }

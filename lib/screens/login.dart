@@ -126,7 +126,6 @@ class _LoginState extends State<Login> {
                           });
                           return user;
                         }).then((data) {
-                          print("in login >> $data");
                           if (returnedUserType == "volunteer" &&
                               data["shoppingListId"].length == 0) {
                             return Navigator.push(
@@ -144,7 +143,7 @@ class _LoginState extends State<Login> {
                                 builder: (context) => shoppingListDetailed(
                                     shoppingListId: data["shoppingListId"][0]
                                         ["_id"],
-                                    volunteerId: data["_id"],
+                                    volunteerData: data,
                                     screen: "login"),
                               ),
                             );
