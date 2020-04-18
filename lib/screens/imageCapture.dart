@@ -158,19 +158,26 @@ class _ImageCaptureState extends State<ImageCapture> {
                 ),
               ],
               if (_imageFile != null) ...[
-                Image.file(
-                  _imageFile,
-                  alignment: Alignment.center,
-                  height: 250.0,
-                  fit: BoxFit.scaleDown,
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                    color: Colors.white,
+                    width: 5,
+                  )),
+                  child: Image.file(
+                    _imageFile,
+                    alignment: Alignment.center,
+                    height: 275.0,
+                    fit: BoxFit.scaleDown,
+                  ),
                 ),
                 Column(
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.only(
-                          top: 7.0, right: 10.0, left: 10.0, bottom: 5.0),
+                          top: 12.0, right: 10.0, left: 10.0, bottom: 5.0),
                       child: ButtonTheme(
-                        height: 40.0,
+                        height: 50.0,
                         minWidth: 400.0,
                         child: RaisedButton.icon(
                           color: Theme.of(context).primaryColor,
@@ -306,29 +313,50 @@ class _UploaderState extends State<Uploader> {
                 if (_uploadTask.isInProgress)
                   Padding(
                       padding: EdgeInsets.only(top: 10.0),
-                      child:
-                          Text("${(progressPercent * 100).ceil()}% complete")),
+                      child: Text("${(progressPercent * 100).ceil()}% complete",
+                          style: Theme.of(context).textTheme.body1)),
                 if (_uploadTask.isComplete)
                   Padding(
-                      padding: EdgeInsets.only(top: 10.0),
-                      child: Text("Shopping list has been uploaded")),
+                    padding: EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "Shopping list has been uploaded",
+                      style: Theme.of(context).textTheme.body1,
+                      textScaleFactor: 1.2,
+                    ),
+                  ),
                 if (_uploadTask.isComplete)
-                  Container(
-                    margin: EdgeInsets.only(top: 20.0),
-                    width: 280.0,
-                    child: FlatButton.icon(
-                      color: Theme.of(context).primaryColor,
-                      label: Text("See My Shopping List"),
-                      icon: Icon(Icons.arrow_back),
-                      onPressed: () {
-                        userDataBuilder(widget.userId).then((data) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      HelpeeDashboard(userData: data)));
-                        });
-                      },
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: 12.0, right: 10.0, left: 10.0, bottom: 5.0),
+                    child: ButtonTheme(
+                      height: 50.0,
+                      minWidth: 400.0,
+                      child: RaisedButton.icon(
+                        color: Theme.of(context).primaryColor,
+                        icon: Icon(Icons.arrow_back, color: Colors.white),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                          side: BorderSide(
+                              color: Theme.of(context).primaryColor,
+                              width: 3.0),
+                        ),
+                        label: Text(
+                          "See My Shopping List",
+                          style: GoogleFonts.pangolin(
+                            textStyle:
+                                TextStyle(fontSize: 20.0, color: Colors.white),
+                          ),
+                        ),
+                        onPressed: () {
+                          userDataBuilder(widget.userId).then((data) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        HelpeeDashboard(userData: data)));
+                          });
+                        },
+                      ),
                     ),
                   ),
               ],
@@ -339,9 +367,10 @@ class _UploaderState extends State<Uploader> {
         child: Column(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(right: 10.0, left: 10.0, bottom: 5.0),
+              padding: EdgeInsets.only(
+                  top: 7.0, right: 10.0, left: 10.0, bottom: 5.0),
               child: ButtonTheme(
-                height: 40.0,
+                height: 50.0,
                 minWidth: 400.0,
                 child: RaisedButton.icon(
                   color: Theme.of(context).primaryColor,
@@ -365,7 +394,7 @@ class _UploaderState extends State<Uploader> {
               padding: EdgeInsets.only(
                   top: 7.0, right: 10.0, left: 10.0, bottom: 5.0),
               child: ButtonTheme(
-                height: 40.0,
+                height: 50.0,
                 minWidth: 400.0,
                 child: RaisedButton.icon(
                   color: Theme.of(context).primaryColor,

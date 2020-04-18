@@ -5,6 +5,7 @@ import './imageCapture.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HelpeeDashboard extends StatefulWidget {
   final Map userData;
@@ -76,23 +77,47 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
                 children: <Widget>[
                   Image.asset('images/groceries/bread.png', width: 60.0),
                   Padding(
-                    padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
-                    child: FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: '${shoppingListData["listImage"]}',
-                        imageSemanticLabel: 'My Shopping List',
-                        height: 275.0),
+                    padding: EdgeInsets.only(top: 5.0, bottom: 20.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                        color: Colors.white,
+                        width: 5,
+                      )),
+                      child: FadeInImage.memoryNetwork(
+                          placeholder: kTransparentImage,
+                          image: '${shoppingListData["listImage"]}',
+                          imageSemanticLabel: 'My Shopping List',
+                          height: 275.0),
+                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(bottom: 7.5),
-                    child: Text(
-                        "Order status is: ${shoppingListData["orderStatus"]}",
-                        style: Theme.of(context).textTheme.body1),
+                    child: RichText(
+                      text: TextSpan(
+                        style: Theme.of(context).textTheme.body1,
+                        children: [
+                          TextSpan(
+                              text: "Order status: ",
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          TextSpan(text: "${shoppingListData["orderStatus"]}")
+                        ],
+                      ),
+                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(bottom: 7.5),
-                    child: Text("Date: $parsedDate",
-                        style: Theme.of(context).textTheme.body1),
+                    child: RichText(
+                      text: TextSpan(
+                        style: Theme.of(context).textTheme.body1,
+                        children: [
+                          TextSpan(
+                              text: "Date: ",
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          TextSpan(text: "$parsedDate")
+                        ],
+                      ),
+                    ),
                   ),
                   if (shoppingListData["volunteer"] != null)
                     Padding(
@@ -104,17 +129,14 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
                     ),
                   if (shoppingListData["volunteer"] == null)
                     Padding(
-                      padding: EdgeInsets.only(bottom: 7.5),
+                      padding: EdgeInsets.only(bottom: 15.0),
                       child: Text(
-                          "Volunteer is not yet assigned to your order. \nPlease check back later",
+                          "A volunteer is not yet assigned to your order. \nPlease check back later!",
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.body1),
                     ),
-                  if (shoppingListData["volunteer"] != null)
-                    Text(
-                        "Contact ${shoppingListData["volunteer"]["name"]}: ${shoppingListData["volunteer"]["phoneNumber"]}",
-                        style: Theme.of(context).textTheme.body1),
-                  if (orderReceived == false)
+                  if (orderReceived == false &&
+                      shoppingListData["volunteer"] != null)
                     Padding(
                       padding: EdgeInsets.all(10.0),
                       child: ButtonTheme(
@@ -149,9 +171,37 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
                     ),
                   if (orderReceived == true)
                     Container(
-                      margin: EdgeInsets.only(top: 10.0),
+                      margin: EdgeInsets.only(top: 3.0, bottom: 5.0),
                       child: Text("You have marked your order as complete.",
                           style: Theme.of(context).textTheme.body1),
+                    ),
+                  if (shoppingListData["volunteer"] != null)
+                    Padding(
+                      padding: EdgeInsets.only(
+                          bottom: 10.0, left: 10.0, right: 10.0, top: 6.0),
+                      child: ButtonTheme(
+                        height: 60.0,
+                        minWidth: 400.0,
+                        child: RaisedButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.0),
+                              side: BorderSide(
+                                  color: Theme.of(context).primaryColor,
+                                  width: 3.0),
+                            ),
+                            color: Theme.of(context).primaryColor,
+                            child: Text(
+                              "Call ${shoppingListData["volunteer"]["name"]}",
+                              style: GoogleFonts.pangolin(
+                                textStyle: TextStyle(
+                                    fontSize: 25.0, color: Colors.white),
+                              ),
+                            ),
+                            onPressed: () {
+                              return _callNumber(
+                                  shoppingListData["volunteer"]["phoneNumber"]);
+                            }),
+                      ),
                     ),
                   Padding(
                     padding: EdgeInsets.only(
@@ -239,5 +289,14 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
         await client.query(QueryOptions(documentNode: gql(shoppingListQuery)));
     Map shoppingListUpdates = response.data["updateShoppingList"];
     return shoppingListUpdates;
+  }
+
+  void _callNumber(number) async {
+    String url = 'tel:${number.toString()}';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
