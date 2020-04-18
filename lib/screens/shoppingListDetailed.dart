@@ -5,16 +5,18 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import '../transformers.dart';
+import '../screens/dashboardVolunteer.dart';
 
 class shoppingListDetailed extends StatefulWidget {
   GoogleMapController mapController;
   final String shoppingListId;
-  final String volunteerId;
+  // final String volunteerId;
+  final Map volunteerData;
   final String screen;
   shoppingListDetailed(
       {Key key,
       @required this.shoppingListId,
-      @required this.volunteerId,
+      @required this.volunteerData,
       this.screen})
       : super(key: key);
 
@@ -47,8 +49,6 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
               child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.green))));
     } else {
-      print(
-          "ID ${widget.shoppingListId} ${widget.volunteerId} ${widget.screen}");
       widget.markers.add(
         Marker(
           markerId: MarkerId('1'),
@@ -116,7 +116,7 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                                     color: Colors.white),
                                 onPressed: () {
                                   pickUpShoppingList(widget.shoppingListId,
-                                      widget.volunteerId);
+                                      widget.volunteerData["_id"]);
                                 },
                                 label: Text(
                                   // "Help ${this.singleShoppingListData["helpee"]["name"]}!",
@@ -296,7 +296,16 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                               child: RaisedButton.icon(
                                 color: Theme.of(context).primaryColorDark,
                                 icon: Icon(Icons.loyalty, color: Colors.white),
-                                onPressed: () {},
+                                onPressed: () {
+                                  return Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            VolunteerDashboard(
+                                                userData:
+                                                    widget.volunteerData)),
+                                  );
+                                },
                                 label: Text(
                                   "Mark it delivered",
                                   style: GoogleFonts.pangolin(
@@ -319,8 +328,6 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
   }
 
   _callNumber(number) async {
-    print(number);
-    print(number.runtimeType);
     String url = 'tel:${number.toString()}';
     if (await canLaunch(url)) {
       await launch(url);
@@ -357,7 +364,6 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
   }
 
   Future pickUpShoppingList(shoppingListId, volunteerId) async {
-    print("in query $shoppingListId, $volunteerId");
     String pickUpShoppingListQuery = '''mutation pickUpShoppingListQuery {
   updateShoppingList(listId: "$shoppingListId", volunteerId: "$volunteerId") {orderStatus}
 }
@@ -372,7 +378,6 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
     // final response = await client
     //     .query(QueryOptions(documentNode: gql(pickUpShoppingListQuery)));
     // String result = response.data["updateShoppingList"];
-    // print(result);
     // return result;
   }
 }

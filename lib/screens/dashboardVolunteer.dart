@@ -41,6 +41,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
     } else {
       return Scaffold(
         appBar: AppBar(
+            automaticallyImplyLeading: false,
             title: Text("The Ones To Help",
                 style: GoogleFonts.londrinaShadow(
                     textStyle: TextStyle(
@@ -94,7 +95,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                           MaterialPageRoute(
                             builder: (context) => shoppingListDetailed(
                                 shoppingListId: shoppingListsData[index]["_id"],
-                                volunteerId: widget.userData["_id"],
+                                volunteerData: widget.userData,
                                 screen: "dashboard"),
                           ),
                         );
