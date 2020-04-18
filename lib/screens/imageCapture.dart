@@ -158,11 +158,18 @@ class _ImageCaptureState extends State<ImageCapture> {
                 ),
               ],
               if (_imageFile != null) ...[
-                Image.file(
-                  _imageFile,
-                  alignment: Alignment.center,
-                  height: 275.0,
-                  fit: BoxFit.scaleDown,
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                    color: Colors.white,
+                    width: 5,
+                  )),
+                  child: Image.file(
+                    _imageFile,
+                    alignment: Alignment.center,
+                    height: 275.0,
+                    fit: BoxFit.scaleDown,
+                  ),
                 ),
                 Column(
                   children: <Widget>[

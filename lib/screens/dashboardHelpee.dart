@@ -77,23 +77,47 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
                 children: <Widget>[
                   Image.asset('images/groceries/bread.png', width: 60.0),
                   Padding(
-                    padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
-                    child: FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: '${shoppingListData["listImage"]}',
-                        imageSemanticLabel: 'My Shopping List',
-                        height: 275.0),
+                    padding: EdgeInsets.only(top: 5.0, bottom: 20.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                        color: Colors.white,
+                        width: 5,
+                      )),
+                      child: FadeInImage.memoryNetwork(
+                          placeholder: kTransparentImage,
+                          image: '${shoppingListData["listImage"]}',
+                          imageSemanticLabel: 'My Shopping List',
+                          height: 275.0),
+                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(bottom: 7.5),
-                    child: Text(
-                        "Order status is: ${shoppingListData["orderStatus"]}",
-                        style: Theme.of(context).textTheme.body1),
+                    child: RichText(
+                      text: TextSpan(
+                        style: Theme.of(context).textTheme.body1,
+                        children: [
+                          TextSpan(
+                              text: "Order status: ",
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          TextSpan(text: "${shoppingListData["orderStatus"]}")
+                        ],
+                      ),
+                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(bottom: 7.5),
-                    child: Text("Date: $parsedDate",
-                        style: Theme.of(context).textTheme.body1),
+                    child: RichText(
+                      text: TextSpan(
+                        style: Theme.of(context).textTheme.body1,
+                        children: [
+                          TextSpan(
+                              text: "Date: ",
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          TextSpan(text: "$parsedDate")
+                        ],
+                      ),
+                    ),
                   ),
                   if (shoppingListData["volunteer"] != null)
                     Padding(
@@ -105,7 +129,7 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
                     ),
                   if (shoppingListData["volunteer"] == null)
                     Padding(
-                      padding: EdgeInsets.only(bottom: 7.5),
+                      padding: EdgeInsets.only(bottom: 15.0),
                       child: Text(
                           "A volunteer is not yet assigned to your order. \nPlease check back later!",
                           textAlign: TextAlign.center,
