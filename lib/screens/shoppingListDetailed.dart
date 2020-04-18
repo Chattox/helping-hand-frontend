@@ -34,8 +34,11 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
     });
   }
 
+  bool isButtonDisabled = false;
+
   @override
   void initState() {
+    isButtonDisabled = false;
     super.initState();
     getShoppingListById(widget.shoppingListId).then((shoppingListData) {
       setSingleShoppingList(shoppingListData);
@@ -115,32 +118,54 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                                 color: Theme.of(context).primaryColor,
                                 icon: Icon(Icons.favorite_border,
                                     color: Colors.white),
-                                onPressed: () {
-                                  pickUpShoppingList(widget.shoppingListId,
-                                          widget.volunteerData["_id"])
-                                      .then((data) {
-                                    return Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            shoppingListDetailed(
-                                                shoppingListId:
-                                                    widget.shoppingListId,
-                                                volunteerData:
-                                                    widget.volunteerData,
-                                                screen: "login"),
+                                onPressed: isButtonDisabled
+                                    ? null
+                                    : () {
+                                        setState(() => isButtonDisabled = true);
+                                        pickUpShoppingList(
+                                                widget.shoppingListId,
+                                                widget.volunteerData["_id"])
+                                            .then((data) {
+                                          return Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  shoppingListDetailed(
+                                                      shoppingListId:
+                                                          widget.shoppingListId,
+                                                      volunteerData:
+                                                          widget.volunteerData,
+                                                      screen: "login"),
+                                            ),
+                                          );
+                                        });
+                                      },
+                                label: isButtonDisabled
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                            Image.asset(
+                                              "images/loader.gif",
+                                              width: 30.0,
+                                            ),
+                                            Text(
+                                              "Processing...",
+                                              style: GoogleFonts.pangolin(
+                                                textStyle: TextStyle(
+                                                    fontSize: 25.0,
+                                                    color: Colors.white),
+                                              ),
+                                            )
+                                          ])
+                                    : Text(
+                                        "I can help!",
+                                        style: GoogleFonts.pangolin(
+                                          textStyle: TextStyle(
+                                              fontSize: 25.0,
+                                              color: Colors.white),
+                                        ),
                                       ),
-                                    );
-                                  });
-                                },
-                                label: Text(
-                                  // "Help ${this.singleShoppingListData["helpee"]["name"]}!",
-                                  "I can help!",
-                                  style: GoogleFonts.pangolin(
-                                    textStyle: TextStyle(
-                                        fontSize: 25.0, color: Colors.white),
-                                  ),
-                                ),
                               ),
                             ),
                           )
@@ -315,23 +340,48 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                               child: RaisedButton.icon(
                                 color: Theme.of(context).primaryColorDark,
                                 icon: Icon(Icons.loyalty, color: Colors.white),
-                                onPressed: () {
-                                  return Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            VolunteerDashboard(
-                                                userData:
-                                                    widget.volunteerData)),
-                                  );
-                                },
-                                label: Text(
-                                  "Mark it delivered",
-                                  style: GoogleFonts.pangolin(
-                                    textStyle: TextStyle(
-                                        fontSize: 25.0, color: Colors.white),
-                                  ),
-                                ),
+                                onPressed: isButtonDisabled
+                                    ? null
+                                    : () {
+                                        setState(() => isButtonDisabled = true);
+                                        deliverShopping(widget.shoppingListId)
+                                            .then((data) {
+                                          return Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    VolunteerDashboard(
+                                                        userData: widget
+                                                            .volunteerData)),
+                                          );
+                                        });
+                                      },
+                                label: isButtonDisabled
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                            Image.asset(
+                                              "images/loader.gif",
+                                              width: 30.0,
+                                            ),
+                                            Text(
+                                              "Processing...",
+                                              style: GoogleFonts.pangolin(
+                                                textStyle: TextStyle(
+                                                    fontSize: 25.0,
+                                                    color: Colors.white),
+                                              ),
+                                            )
+                                          ])
+                                    : Text(
+                                        "Mark it delivered",
+                                        style: GoogleFonts.pangolin(
+                                          textStyle: TextStyle(
+                                              fontSize: 25.0,
+                                              color: Colors.white),
+                                        ),
+                                      ),
                               ),
                             ),
                           )
@@ -397,6 +447,24 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
     final response = await client
         .query(QueryOptions(documentNode: gql(pickUpShoppingListQuery)));
     String result = response.data["updateShoppingList"]["orderStatus"];
-    return "hello";
+    return result;
+  }
+
+  Future deliverShopping(shoppingListId) async {
+    String deliverShoppingQuery =
+        '''mutation deliverShoppingQuery { updateShoppingList(listId: "$shoppingListId", volunteerComplete: true){orderStatus}}
+''';
+    final HttpLink httpLink = HttpLink(
+      uri: 'http://helping-hand-kjc.herokuapp.com/graphql',
+    );
+    GraphQLClient client = GraphQLClient(
+      cache: InMemoryCache(),
+      link: httpLink,
+    );
+    final response = await client
+        .query(QueryOptions(documentNode: gql(deliverShoppingQuery)));
+    String result = response.data["updateShoppingList"]["orderStatus"];
+    print(result);
+    return result;
   }
 }
