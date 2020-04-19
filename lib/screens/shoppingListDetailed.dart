@@ -10,7 +10,6 @@ import '../screens/dashboardVolunteer.dart';
 class shoppingListDetailed extends StatefulWidget {
   GoogleMapController mapController;
   final String shoppingListId;
-  // final String volunteerId;
   final Map volunteerData;
   final String screen;
   shoppingListDetailed(
@@ -46,6 +45,7 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
   }
 
   Widget build(BuildContext context) {
+    print(this.singleShoppingListData);
     if (this.singleShoppingListData == null) {
       return Center(
           child: Container(
@@ -115,6 +115,9 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                               height: 60.0,
                               minWidth: 400.0,
                               child: RaisedButton.icon(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                ),
                                 color: Theme.of(context).primaryColor,
                                 icon: Icon(Icons.favorite_border,
                                     color: Colors.white),
@@ -171,33 +174,57 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                           )
                         : null,
                   ),
-                  Container(
-                    margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                          color: Colors.white,
-                          width: 5,
-                        )),
-                        child: FadeInImage.memoryNetwork(
-                          placeholder: kTransparentImage,
-                          image: '${this.singleShoppingListData["listImage"]}',
-                          imageSemanticLabel: 'My Shopping List',
+                  (this.singleShoppingListData["listImage"] != null)
+                      ? Container(
+                          margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                color: Colors.white,
+                                width: 5,
+                              )),
+                              child: FadeInImage.memoryNetwork(
+                                placeholder: kTransparentImage,
+                                image:
+                                    '${this.singleShoppingListData["listImage"]}',
+                                imageSemanticLabel: 'My Shopping List',
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container(
+                          margin: const EdgeInsets.all(10.0),
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Theme.of(context).primaryColor)),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount:
+                                this.singleShoppingListData["listText"].length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return ListTile(
+                                leading: Icon(Icons.grade,
+                                    color: Theme.of(context).primaryColor,
+                                    size: 20.0),
+                                title: Align(
+                                  alignment: Alignment(-1.2, 0),
+                                  child: Text(
+                                    "${this.singleShoppingListData["listText"][index]}",
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context)
+                                              .primaryColorDark),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                  // Padding(
-                  //   padding: EdgeInsets.only(right: 10.0),
-                  //   child: Align(
-                  //       alignment: Alignment.center,
-                  //       child: Image.asset(
-                  //         "images/groceries/mix.png",
-                  //         width: 50.0,
-                  //       )),
-                  // ),
                   Center(
                       child: (widget.screen != "login")
                           ? Padding(
@@ -230,17 +257,31 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                           : null),
                   Center(
                       child: (widget.screen == "login")
-                          ? Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: Text(
-                                  "${this.singleShoppingListData["helpee"]["streetAddress"]}\n${this.singleShoppingListData["helpee"]["city"]}\n${this.singleShoppingListData["helpee"]["postcode"]}",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.lato(
-                                    textStyle: TextStyle(
-                                        fontSize: 24,
-                                        color:
-                                            Theme.of(context).primaryColorDark),
-                                  )),
+                          ? Row(
+                              children: [
+                                Expanded(
+                                  // padding: EdgeInsets.all(10.0),
+                                  child: Text(
+                                    "${this.singleShoppingListData["helpee"]["streetAddress"]}\n${this.singleShoppingListData["helpee"]["city"]}\n${this.singleShoppingListData["helpee"]["postcode"]}",
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(
+                                          fontSize: 24,
+                                          color: Theme.of(context)
+                                              .primaryColorDark),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(right: 10.0),
+                                  child: Align(
+                                      alignment: Alignment.center,
+                                      child: Image.asset(
+                                        "images/groceries/bag-of-groceries.png",
+                                        width: 50.0,
+                                      )),
+                                )
+                              ],
                             )
                           : null),
                   Center(
@@ -255,6 +296,9 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                               height: 60.0,
                               minWidth: 400.0,
                               child: RaisedButton.icon(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                ),
                                 icon: Icon(Icons.call, color: Colors.white),
                                 color: Theme.of(context).primaryColor,
                                 onPressed: () {
@@ -310,6 +354,9 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                       height: 60.0,
                       minWidth: 400.0,
                       child: RaisedButton.icon(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
                         color: Theme.of(context).primaryColor,
                         icon: Icon(Icons.location_on, color: Colors.white),
                         onPressed: () {
@@ -338,6 +385,9 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
                               height: 60.0,
                               minWidth: 400.0,
                               child: RaisedButton.icon(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                ),
                                 color: Theme.of(context).primaryColorDark,
                                 icon: Icon(Icons.loyalty, color: Colors.white),
                                 onPressed: isButtonDisabled
@@ -416,7 +466,7 @@ class _shoppingListDetailedState extends State<shoppingListDetailed> {
 
   Future getShoppingListById(shoppingListId) async {
     String shoppingListByIdQuery = '''query shoppingListByIdQuery {
-  shoppingListById(id: "$shoppingListId") {orderStatus createdAt listImage helpee  {name phoneNumber postcode streetAddress city locationLatLng}}
+  shoppingListById(id: "$shoppingListId") {orderStatus createdAt listImage listText helpee  {name phoneNumber postcode streetAddress city locationLatLng}}
 }
 ''';
     final HttpLink httpLink = HttpLink(
