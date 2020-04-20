@@ -315,7 +315,7 @@ class _RegistrationState extends State<Registration> {
                   child: CheckboxListTile(
                     title: widget.screen == 'volunteer'
                         ? Text(
-                            "Disclaimer: I confirm that I authorise my name and phone number to be shared with the person I am helping.",
+                            "Disclaimer: I confirm that I authorise Helping Hand to share my name and phone number with the person I am helping.",
                             style: GoogleFonts.lato(
                               textStyle: TextStyle(
                                   fontWeight: FontWeight.w400,
