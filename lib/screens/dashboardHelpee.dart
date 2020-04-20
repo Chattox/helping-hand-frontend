@@ -123,7 +123,7 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
                     Padding(
                       padding: EdgeInsets.only(bottom: 7.5),
                       child: Text(
-                          "${shoppingListData["volunteer"]["name"]} is assigned to your order. \n They can get in touch with you via your phone number.",
+                          "${shoppingListData["volunteer"]["name"]} is currently helping with your shopping. \n If you need to, you can contact ${shoppingListData["volunteer"]["name"]} below.",
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.body1),
                     ),
@@ -131,7 +131,7 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
                     Padding(
                       padding: EdgeInsets.only(bottom: 15.0),
                       child: Text(
-                          "A volunteer is not yet assigned to your order. \nPlease check back later!",
+                          "The shopping list you sent in is currently waiting to be picked up.",
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.body1),
                     ),

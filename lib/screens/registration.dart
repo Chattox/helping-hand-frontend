@@ -324,7 +324,7 @@ class _RegistrationState extends State<Registration> {
                             ),
                             textAlign: TextAlign.justify)
                         : Text(
-                            "Disclaimer: I confirm that I authorise my name and approximate location to be shared with all potential volunteers in my area and also my phone number and exact address to be shared with the person who helps me.",
+                            "Disclaimer: I confirm that I authorise Helping Hand to share my name and approximate location with all potential volunteers in my area. My phone number and exact address will be shared only with the person who helps me.",
                             style: GoogleFonts.lato(
                               textStyle: TextStyle(
                                   fontWeight: FontWeight.w400,
