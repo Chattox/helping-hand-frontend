@@ -85,10 +85,10 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
                         width: 5,
                       )),
                       child: FadeInImage.memoryNetwork(
-                          placeholder: kTransparentImage,
-                          image: '${shoppingListData["listImage"]}',
-                          imageSemanticLabel: 'My Shopping List',
-                          height: 275.0),
+                        placeholder: kTransparentImage,
+                        image: '${shoppingListData["listImage"]}',
+                        imageSemanticLabel: 'My Shopping List',
+                      ),
                     ),
                   ),
                   Padding(
@@ -98,7 +98,7 @@ class _HelpeeDashboardState extends State<HelpeeDashboard> {
                         style: Theme.of(context).textTheme.body1,
                         children: [
                           TextSpan(
-                              text: "Order status: ",
+                              text: "Status: ",
                               style: TextStyle(fontWeight: FontWeight.bold)),
                           TextSpan(text: "${shoppingListData["orderStatus"]}")
                         ],
