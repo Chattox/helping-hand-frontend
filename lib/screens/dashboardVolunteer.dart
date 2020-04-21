@@ -4,6 +4,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import './shoppingListDetailed.dart';
 import '../transformers.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 class VolunteerDashboard extends StatefulWidget {
   final Map userData;
@@ -63,48 +64,62 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: shoppingListsData.length,
-                itemBuilder: (BuildContext context, int index) {
-                  var formattedDate =
-                      formatDate(shoppingListsData[index]["createdAt"]);
-                  return Card(
-                    child: ListTile(
-                      leading: (shoppingListsData[index]["listImage"] != null)
-                          ? CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  shoppingListsData[index]["listImage"]),
-                            )
-                          : Icon(Icons.format_list_bulleted,
-                              color: Theme.of(context).primaryColorDark,
-                              size: 40.0),
-                      title: Text(
-                          "${shoppingListsData[index]["helpee"]["name"]} (${shoppingListsData[index]["distance"]} mi)",
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor),
-                          )),
-                      subtitle: Text(formattedDate),
-                      trailing: Icon(Icons.arrow_forward_ios,
-                          color: Theme.of(context).primaryColor),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => shoppingListDetailed(
-                                shoppingListId: shoppingListsData[index]["_id"],
-                                volunteerData: widget.userData,
-                                screen: "dashboard"),
+              child: AnimationLimiter(
+                child: ListView.builder(
+                  itemCount: shoppingListsData.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    var formattedDate =
+                        formatDate(shoppingListsData[index]["createdAt"]);
+                    return AnimationConfiguration.staggeredList(
+                      position: index,
+                      duration: const Duration(milliseconds: 700),
+                      child: SlideAnimation(
+                        verticalOffset: 50.0,
+                        child: FadeInAnimation(
+                          child: Card(
+                            child: ListTile(
+                              leading: (shoppingListsData[index]["listImage"] !=
+                                      null)
+                                  ? CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                          shoppingListsData[index]
+                                              ["listImage"]),
+                                    )
+                                  : Icon(Icons.format_list_bulleted,
+                                      color: Theme.of(context).primaryColorDark,
+                                      size: 40.0),
+                              title: Text(
+                                  "${shoppingListsData[index]["helpee"]["name"]} (${shoppingListsData[index]["distance"]} mi)",
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context).primaryColor),
+                                  )),
+                              subtitle: Text(formattedDate),
+                              trailing: Icon(Icons.arrow_forward_ios,
+                                  color: Theme.of(context).primaryColor),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => shoppingListDetailed(
+                                        shoppingListId: shoppingListsData[index]
+                                            ["_id"],
+                                        volunteerData: widget.userData,
+                                        screen: "dashboard"),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
-                        );
-                      },
-                    ),
-                  );
-                },
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
+            )
           ],
         ),
       );
